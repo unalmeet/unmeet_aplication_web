@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {Button, Form,FormGroup,Label, Input, Col } from 'reactstrap';
-import {Card, CardBody, CardFooter}  from 'reactstrap';
+import {Button, Form,FormGroup,Label, Input, Col, CardHeader } from 'reactstrap';
+import {Card, CardBody}  from 'reactstrap';
+
+
 
 class Login extends Component {
     constructor(props){
@@ -27,43 +29,37 @@ class Login extends Component {
     }
 
     render(){
-        const FormLogin = ()=>{
-            return(
-                <Form>
-                    <FormGroup row>
-                        <Label htmlFor="email">Email:</Label>
-                        <Col md={10}>
-                        <Input type="email" id="email" name="email" placeholder="Email" value={this.state.email}
-                        onChange={this.handleInputChange}/> 
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Label htmlFor="password">Password:</Label>
-                        <Col md={10}>
-                        <Input type="password" id="password" name="password" placeholder="Password" value={this.state.password}
-                        onChange={this.handleInputChange}/> 
-                        </Col>
-                    </FormGroup>
-
-                    <FormGroup row>
-                        <Col md={{size:10, offset:2}}>
-                            <Button type="submit" color="primary">Login</Button>
-                        </Col>
-                    </FormGroup>
-                </Form>
-            );
-        }
-
+    
         return(
+            <div className="text-center"> 
             <Card>
+                <div className="card-title">Login</div>
                 <CardBody>
-                    {FormLogin}
+                    <Form>
+                        <FormGroup row>
+                            <Label htmlFor="email" md={2}>Email:</Label>
+                            <Col md={10}>
+                            <Input type="email" id="email" name="email" placeholder="Email" value={this.state.email}
+                            onChange={this.handleInputChange}/> 
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="password" md={2}>Password:</Label>
+                            <Col md={10}>
+                            <Input type="password" id="password" name="password" placeholder="Password" value={this.state.password}
+                            onChange={this.handleInputChange}/> 
+                            </Col>
+                        </FormGroup>
+
+                        <FormGroup row>
+                            <Col md={{size:12}}>
+                                <Button type="submit" color="primary">Login</Button>
+                            </Col>
+                        </FormGroup>
+                    </Form>
                 </CardBody>
-                <CardFooter>
-                    <Button type="submit" color="danger">Cerra</Button>
-                </CardFooter>
             </Card>
-           
+            </div>
         );
     }
 }
