@@ -14,11 +14,17 @@ class Main extends Component {
           token:''
         };
     }
+    credentialLogin(email){
+      console.log(email);
+      console.log("email");
+      this.setState({email:"email"});
+    }
+    
     render(){
         return (
             <div className="App row text-center">
               <Switch>
-                  <Route path="/home" component={Home} />
+                  <Route path="/home" component={()=><Home credentials={(email)=>this.credentialLogin(email)}/>} />
                   
                   <Route exact path="/calendar" component={Calendar} />
                   <Route exact path ="/inmeeting" component={InMeeting}/>

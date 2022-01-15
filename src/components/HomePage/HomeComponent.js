@@ -9,12 +9,26 @@ import { Button } from "../Button";
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      user:"",
+      email:"",
+      token:""
+    };
+    
+  }
+  answerCredentials(event,email){
+    this.setState({email:"email",});
+
+    if(email!=""){
+      this.props.credentials(this.state.email)
+    }
+    event.preventDefault();
   }
 
   render() {
-    const login=<Login/>;
+    const login=<Login answer={(event,email)=>this.answerCredentials(event,email)}/>;
     const register=<Register className="bg-primary"/>;
+
     return (
       <div className="col-12 col-md-12">
         <div className="HomePage">
@@ -24,7 +38,7 @@ class Home extends Component {
             <Button text="Join Meeting" color="#144B7D" textColor="#FFFF" />
           </div>
           <div className="home_links_account">
-            <ModalLateral boton="Login" content={login}/>
+            <ModalLateral boton="Login" content={login} />
             <ModalLateral boton="Register" content={register}/>
           </div>
         </div>

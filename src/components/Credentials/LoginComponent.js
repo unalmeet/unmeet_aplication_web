@@ -37,7 +37,7 @@ class Login extends Component {
                     <h4 className="text-title text-white">Login</h4>
                 </CardHeader>
                 <CardBody>
-                    <Form>
+                    <Form onSubmit={(event)=>{this.props.answer(event,this.state.email)}} >
                         <FormGroup row>
                             <Label htmlFor="email" md={12}>Email:</Label>
                             <Col md={12}>
