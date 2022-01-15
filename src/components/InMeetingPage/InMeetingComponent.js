@@ -16,54 +16,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const users = [
-    {
-        id: 1,
-        name: 'Cristhian Camilo',
-        avatar: null
-    },
-    {
-        id: 2,
-        name: 'Angela Saavedra',
-        avatar: avatarImg
-    },
-    {
-        id: 3,
-        name: 'Pepito Perez',
-        avatar: null
-    },
-    {
-        id: 4,
-        name: 'Cristhian Camilo',
-        avatar: null
-    },
-    {
-        id: 5,
-        name: 'Angela Saavedra',
-        avatar: avatarImg
-    },
-    {
-        id: 6,
-        name: 'Pepito Perez',
-        avatar: null
-    },
-    {
-        id: 7,
-        name: 'Cristhian Camilo',
-        avatar: null
-    },
-    {
-        id: 8,
-        name: 'Angela Saavedra',
-        avatar: avatarImg
-    },
-    {
-        id: 9,
-        name: 'Pepito Perez',
-        avatar: null
-    }
-]
-
 const UserBox = props => {
 
     const { user } = props;
@@ -197,6 +149,34 @@ const ChatMessages = () => {
 }
 
 const InMeeting = props => {
+
+    const users = [
+        {
+            id: 1,
+            name: 'Cristhian Camilo',
+            avatar: null
+        },
+        {
+            id: 2,
+            name: 'Angela Saavedra',
+            avatar: avatarImg
+        },
+        {
+            id: 3,
+            name: 'Pepito Perez',
+            avatar: null
+        },
+        {
+            id: 4,
+            name: 'Cristhian Camilo',
+            avatar: null
+        },
+        {
+            id: 5,
+            name: 'Angela Saavedra',
+            avatar: avatarImg
+        }
+    ]
 
     return <Row className='full-height'>
             <Col xs={12} md={2} className='chat-container'>

@@ -68,6 +68,8 @@
 
 .chat-container {
     position: relative;
+    color: white;
+    background-color: #144b7d;
 }
 
 .chat-input {
