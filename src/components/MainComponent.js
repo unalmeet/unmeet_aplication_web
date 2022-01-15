@@ -16,9 +16,10 @@ class Main extends Component {
     }
     render(){
         return (
-            <div className="App">
+            <div className="App row text-center">
               <Switch>
                   <Route path="/home" component={Home} />
+                  
                   <Route exact path="/calendar" component={Calendar} />
                   <Route exact path ="/inmeeting" component={InMeeting}/>
                   <Redirect to="/home"/>

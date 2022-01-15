@@ -32,20 +32,22 @@ class Login extends Component {
     
         return(
             <div className="text-center"> 
-            <Card>
-                <div className="card-title">Login</div>
+            
+                <CardHeader className="bg-primary">
+                    <h4 className="text-title text-white">Login</h4>
+                </CardHeader>
                 <CardBody>
                     <Form>
                         <FormGroup row>
-                            <Label htmlFor="email" md={2}>Email:</Label>
-                            <Col md={10}>
+                            <Label htmlFor="email" md={12}>Email:</Label>
+                            <Col md={12}>
                             <Input type="email" id="email" name="email" placeholder="Email" value={this.state.email}
                             onChange={this.handleInputChange}/> 
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Label htmlFor="password" md={2}>Password:</Label>
-                            <Col md={10}>
+                            <Label htmlFor="password" md={12}>Password:</Label>
+                            <Col md={12}>
                             <Input type="password" id="password" name="password" placeholder="Password" value={this.state.password}
                             onChange={this.handleInputChange}/> 
                             </Col>
@@ -58,7 +60,7 @@ class Login extends Component {
                         </FormGroup>
                     </Form>
                 </CardBody>
-            </Card>
+            
             </div>
         );
     }

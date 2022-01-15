@@ -8,6 +8,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .home_buttons_meeting {
