@@ -35,7 +35,6 @@ class Days extends React.Component {
         const date = meetingdatetime.getUTCDate();
         const month = meetingdatetime.getUTCMonth();
         const year = meetingdatetime.getUTCFullYear();
-        console.log(this.props.meetings[meeting])
         if (
           tomorrow.getDate() === date &&
           tomorrow.getMonth() === month &&
@@ -45,7 +44,6 @@ class Days extends React.Component {
         }
       }
     }
-    console.log(mydays);
     const daystorender = mydays.map((day, index) => (
       <Card
         key={index}

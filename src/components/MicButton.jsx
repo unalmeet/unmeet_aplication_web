@@ -1,5 +1,5 @@
 import React from "react";
-import { Stage, Layer, Rect, Circle, Line, Text, Arc } from "react-konva";
+import { Stage, Layer, Rect, Circle, Arc } from "react-konva";
 import { Spring, animated, SpringContext } from "react-spring";
 
 export class MicButton extends React.Component {
@@ -9,14 +9,14 @@ export class MicButton extends React.Component {
       width: this.props.width * 0.95,
       height: this.props.height,
       animate: true,
-      color: true
+      color: false,
     };
   }
 
   clickMic = () => {
     // to() is a method of `Konva.Node` instances
     this.setState({
-      color: !this.state.color
+      color: !this.state.color,
     });
   };
   mouseOver = () => {
@@ -38,10 +38,9 @@ export class MicButton extends React.Component {
   render() {
     return (
       <SpringContext pause={this.state.animate}>
-        <Spring
-        >
+        <Spring>
           {(styles) => (
-            <animated.div className="Logo" style={{margin:"10px"}}>
+            <animated.div className="Logo" style={{ margin: "10px" }}>
               <Stage
                 width={this.state.width}
                 height={this.state.height}
@@ -54,7 +53,7 @@ export class MicButton extends React.Component {
                     x={this.state.width / 2}
                     y={this.state.width / 2}
                     radius={this.state.width / 2}
-                    fill={this.state.color ? "#029ACA":"red"}  
+                    fill={this.state.color ? "#029ACA" : "red"}
                   />
                   <Rect
                     x={this.state.width * 0.35}

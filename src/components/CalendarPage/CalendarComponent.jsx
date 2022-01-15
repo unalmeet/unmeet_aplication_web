@@ -12,9 +12,11 @@ import { Logo } from "../Logo";
 import Days from "./Days";
 import { MicButton } from "../MicButton";
 import { CamButton } from "../CamButton";
+import ModalBoton from "../HomePage/Modal-Boton";
+import NewMeeting from "../HomePage/newMeetingComponent";
+import JoinMeeting from "../HomePage/joinMeetingComponent";
 
 class Calendar extends React.Component {
-  
   state = {
     meetings: [],
   };
@@ -36,14 +38,15 @@ class Calendar extends React.Component {
     })
       .then((response) => response.json())
       .then((query) => {
-        console.log(query.data.listMeetings )
         this.setState({ meetings: query.data.listMeetings });
       });
   }
   render() {
+    const newMeeting = <NewMeeting className="bg-primary" />;
+    const joinMeeting = <JoinMeeting className="bg-primary" />;
     return (
       <div>
-        <Days meetings={this.state.meetings}/>
+        <Days meetings={this.state.meetings} />
         <div className="calendar_meeting_display">
           <div className="calendar_meeting_videodisplay">
             <Card
@@ -67,26 +70,8 @@ class Calendar extends React.Component {
             </Card>
           </div>
           <div className="calendar_meeting_buttons">
-            <Button
-              style={{
-                margin: "1rem",
-                width: "80%",
-                backgroundColor: "#029ACA",
-                border: "0",
-              }}
-            >
-              New Meeting
-            </Button>
-            <Button
-              style={{
-                margin: "1rem",
-                width: "80%",
-                backgroundColor: "#029ACA",
-                border: "0",
-              }}
-            >
-              Join Meeting
-            </Button>
+            <ModalBoton boton="New Meeting" color= "#029ACA" content={newMeeting} />
+            <ModalBoton boton="Join Meeting" color= "#029ACA" content={joinMeeting} />
             <div className="calendar_cammic_buttons">
               <MicButton width={100} height={100} />
               <CamButton width={100} height={100} />

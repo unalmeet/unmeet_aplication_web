@@ -1,5 +1,5 @@
 import React from "react";
-import { Stage, Layer, Rect, Circle, Line, Text, Arc } from "react-konva";
+import { Stage, Layer, Rect, Circle, Line } from "react-konva";
 import { Spring, animated, SpringContext } from "react-spring";
 
 export class CamButton extends React.Component {
@@ -9,7 +9,7 @@ export class CamButton extends React.Component {
       width: this.props.width * 0.95,
       height: this.props.height,
       animate: true,
-      color: true,
+      color: false,
     };
   }
 

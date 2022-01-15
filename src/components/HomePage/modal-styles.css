@@ -1,41 +1,45 @@
-:root{
-    --bg-side-bar:#ffffff;
-    --bg-menu:#ffffff;
-    --bg-mn-bg:#000000af;
-    --principal-color:#1e73be;
-    --menu-size:27vw;
-    --menu-v:0.2s;
+:root {
+    --bg-side-bar: #ffffff;
+    --bg-menu: #ffffff;
+    --bg-mn-bg: #000000af;
+    --principal-color: #1e73be;
+    --menu-size: 27vw;
+    --menu-v: 0.2s;
 }
-body{
-    margin:0;
+
+body {
+    margin: 0;
 }
+
+
 /* scroll bar */
-.menu::-webkit-scrollbar{
+
+.menu::-webkit-scrollbar {
     width: 4px;
 }
-.menu::-webkit-scrollbar-thumb{
-    background-color:rgba(0, 0, 0, 0.35);
+
+.menu::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.35);
     /* border-radius:10px; */
 }
 
 
-
-
-
 /* menu-container */
-.side-bar-container{
-    top:0;
-    left:0;
-    width:100vw;
-    visibility:hidden;
-    position:fixed;
+
+.side-bar-container {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    visibility: hidden;
+    position: fixed;
     display: flex;
     background-color: var(--bg-mn-bg);
     backdrop-filter: blur(2px);
 }
-.side-background{
-    height:100vh;
-    width:100%;
+
+.side-background {
+    height: 100vh;
+    width: 100%;
 }
 
 .side-bar {
@@ -46,120 +50,125 @@ body{
     background-color: var(--bg-side-bar);
     align-items: stretch;
     font-family: Arial, sans-serif;
-    transition:all var(--menu-v) linear;
+    transition: all var(--menu-v) linear;
     transform: translateX(-100%);
 }
-.header-side-bar{
-    background:var(--principal-color);
+
+.header-side-bar {
+    background: var(--principal-color);
     /* width:var(--menu-size); */
-    width:100%;
-    height:2rem;    
-    justify-content:flex-end;
-    align-items:center; 
-    display:flex;
+    width: 100%;
+    height: 2rem;
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
 }
-.body-side-bar{
-    width:var(--menu-size);
-    height:calc(100vh - 38px);
+
+.body-side-bar {
+    width: var(--menu-size);
+    height: calc(100vh - 38px);
     overflow-y: scroll;
 }
 
 
-
-
 /* MENUS */
-.menu{
-    
-    width:var(--menu-size);
-    height:100vh;
-    position:absolute;
-    visibility:hidden;
-    transition:all var(--menu-v) linear;
+
+.menu {
+    width: var(--menu-size);
+    height: 100vh;
+    position: absolute;
+    visibility: hidden;
+    transition: all var(--menu-v) linear;
     background-color: var(--bg-menu);
     overflow-y: scroll;
     transform: translateX(-100%);
 }
-.sub-menu{
+
+.sub-menu {
     transform: translateX(100%);
 }
 
 
-
-
 /* ACTIVADORES */
-.active{
-    transform: translateX(0);
-    visibility:visible;
-    transition:all var(--menu-v) linear;
-    
-}
 
+.active {
+    transform: translateX(0);
+    visibility: visible;
+    transition: all var(--menu-v) linear;
+}
 
 
 /* BTN*/
-.btn{
-    background:transparent;
+
+.btn {
+    background: transparent;
     cursor: pointer;
-    margin:5px;
-}
-#close-menu{
-    float:right;
-    font-size:3rem;
-    left:10px;
-}
-.close-sub-menu{
-    padding:10px;
-    color:#000;
-    text-decoration: none;
-    padding:12px 20px 12px 36px;
-    border-bottom: solid 1px rgba(0, 0, 0, 0.529);
-}
-.close-sub-menu:hover{
- background-color:rgbax;  
-}
-i{
-    color:rgba(0, 0, 0, 0.59);
+    margin: 5px;
 }
 
+#close-menu {
+    float: right;
+    font-size: 3rem;
+    left: 10px;
+}
+
+.close-sub-menu {
+    padding: 10px;
+    color: #000;
+    text-decoration: none;
+    padding: 12px 20px 12px 36px;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.529);
+}
+
+.close-sub-menu:hover {
+    background-color: rgbax;
+}
+
+i {
+    color: rgba(0, 0, 0, 0.59);
+}
 
 
 /* DETALLES */
+
 .side-bar li {
     list-style: none;
 }
+
 .side-bar ul {
-    padding-inline-start: 0;    
-    margin-top:0;
+    padding-inline-start: 0;
+    margin-top: 0;
 }
-.side-bar ul li a{
+
+.side-bar ul li a {
     display: flex;
-    justify-content:space-between;
-    color:#000;
+    justify-content: space-between;
+    color: #000;
     text-decoration: none;
-    padding:12px 20px 12px 36px;
+    padding: 12px 20px 12px 36px;
     font-size: 12px;
 }
-.list-title{
-    font-size:17px;
-    padding:15px 20px 15px 36px;
+
+.list-title {
+    font-size: 17px;
+    padding: 15px 20px 15px 36px;
 }
-.a-white{
-    color:white;
-    text-decoration:none;
-    padding:10px;
+
+.a-white {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
 }
 
 @keyframes hidde-lateral {
-    0%{
-
-    }
+    0% {}
 }
 
-@media screen and (max-width: 780px){
+@media screen and (max-width: 780px) {
     .side-bar {
         min-width: 80vw;
     }
-    .menu{
-        width:100%;
+    .menu {
+        width: 100%;
     }
 }
