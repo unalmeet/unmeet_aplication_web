@@ -14,11 +14,7 @@ import {
     faLaugh,
     faPaperPlane
 } from "@fortawesome/free-solid-svg-icons";
-
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { map } from 'jquery';
-
 
 const users = [
     {
@@ -75,7 +71,7 @@ const UserBox = props => {
     return <Col xs={12} md={3} className='user-box'>
         {
             user.avatar ? 
-            <img src={user.avatar} className=''/>
+            <img src={user.avatar} alt='user-box'/>
             :
             <div className='user-initials'>
                 {user.name[0]}
