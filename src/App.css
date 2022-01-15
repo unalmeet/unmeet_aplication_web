@@ -1,3 +1,7 @@
+:root{
+    --primary-color:#144b7d;
+    
+}
 .Button {
     padding: 1rem;
 }
@@ -8,6 +12,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .home_buttons_meeting {

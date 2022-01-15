@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Form,FormGroup,Label, Input, Col } from 'reactstrap';
-import {Card, CardBody, CardFooter}  from 'reactstrap';
+import {Card, CardBody, CardFooter, CardHeader}  from 'reactstrap';
 
 class Register extends Component {
     constructor(props){
@@ -31,34 +31,36 @@ class Register extends Component {
     render(){
         return(
             <div className="text-center"> 
-                <Card >
-                 <div className="card-title">Register</div>
+                
+                <CardHeader className="bg-primary">
+                    <h4 className="text-title text-white">Register</h4>
+                </CardHeader>
                 <CardBody>
                     <Form>
                         <FormGroup row>
-                            <Label htmlFor="user" md={2}>User Name:</Label>
-                            <Col md={10}>
+                            <Label htmlFor="user" md={12}>User Name:</Label>
+                            <Col md={12}>
                             <Input type="name" id="user" name="user" placeholder="User Name" value={this.state.user}
                             onChange={this.handleInputChange}/> 
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Label htmlFor="email" md={2}>Email:</Label>
-                            <Col md={10}>
+                            <Label htmlFor="email" md={12}>Email:</Label>
+                            <Col md={12}>
                             <Input type="email" id="email" name="email" placeholder="Email" value={this.state.email}
                             onChange={this.handleInputChange}/> 
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Label htmlFor="password" md={2}>Password:</Label>
-                            <Col md={10}>
+                            <Label htmlFor="password" md={12}>Password:</Label>
+                            <Col md={12}>
                             <Input type="password" id="password" name="password" placeholder="Password" value={this.state.password}
                             onChange={this.handleInputChange}/> 
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Label htmlFor="password_confirmation" md={2}> Password Confirmation:</Label>
-                            <Col md={10}>
+                            <Label htmlFor="password_confirmation" md={12}> Password Confirmation:</Label>
+                            <Col md={12}>
                             <Input type="password" id="password_confirmation" name="password_confirmation" placeholder="Password" value={this.state.password_confirmation}
                             onChange={this.handleInputChange}/> 
                             </Col>
@@ -71,7 +73,6 @@ class Register extends Component {
                         </FormGroup>
                     </Form>
                 </CardBody>
-            </Card>
             </div>
            
         );
