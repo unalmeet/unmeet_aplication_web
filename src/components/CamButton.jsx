@@ -9,15 +9,29 @@ export class CamButton extends React.Component {
       width: this.props.width * 0.95,
       height: this.props.height,
       animate: true,
-      color: true
+      color: true,
     };
   }
 
   clickCam = () => {
     // to() is a method of `Konva.Node` instances
     this.setState({
-      color: !this.state.color
+      color: !this.state.color,
     });
+    var constraints = { audio: true, video: { width: 1280, height: 720 } };
+
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then(function (mediaStream) {
+        var video = document.querySelector("video");
+        video.srcObject = mediaStream;
+        video.onloadedmetadata = function (e) {
+          video.play();
+        };
+      })
+      .catch(function (err) {
+        console.log(err.name + ": " + err.message);
+      }); // always check for errors at the end.
   };
   mouseOver = () => {
     // to() is a method of `Konva.Node` instances
@@ -38,8 +52,7 @@ export class CamButton extends React.Component {
   render() {
     return (
       <SpringContext pause={this.state.animate}>
-        <Spring
-        >
+        <Spring>
           {(styles) => (
             <animated.div className="Logo" style={styles}>
               <Stage
@@ -54,13 +67,13 @@ export class CamButton extends React.Component {
                     x={this.state.width / 2}
                     y={this.state.width / 2}
                     radius={this.state.width / 2}
-                    fill={this.state.color ? "#029ACA":"red"}  
+                    fill={this.state.color ? "#029ACA" : "red"}
                   />
                   <Rect
-                    x={this.state.width * 0.20}
-                    y={this.state.width * 0.20}
-                    width={this.state.width * 0.60}
-                    height={this.state.width * 0.60}
+                    x={this.state.width * 0.2}
+                    y={this.state.width * 0.2}
+                    width={this.state.width * 0.6}
+                    height={this.state.width * 0.6}
                     fill="white"
                     cornerRadius={this.state.width * 0.1}
                   />
