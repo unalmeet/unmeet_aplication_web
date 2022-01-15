@@ -28,7 +28,7 @@ class Days extends React.Component {
     for (var i = 0; i < mydays.length; i++) {
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + i);
-      mydays[i] = { day: namesDays[tomorrow.getDay()], meetings:[]};
+      mydays[i] = { date: tomorrow.toLocaleDateString(),day: namesDays[tomorrow.getDay()], meetings:[]};
       for (let meeting in this.props.meetings) {
         const meetingtimestamp = Date.parse(this.props.meetings[meeting].date_start);
         const meetingdatetime = new Date(meetingtimestamp);
@@ -55,12 +55,12 @@ class Days extends React.Component {
         }}
       >
         <CardBody>
-          <CardTitle tag="h5"></CardTitle>
+          <CardTitle tag="h5">{day.day}</CardTitle>
           <CardSubtitle className="mb-2" tag="h6">
-            {day.day}
+            {day.date}
           </CardSubtitle>
           <CardText tag="small">
-            <Day meetings={day.meetings} />
+            <Day meetings={day.meetings} countmeetings={day.meetings.length} />
           </CardText>
         </CardBody>
       </Card>

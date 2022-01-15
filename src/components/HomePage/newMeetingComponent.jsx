@@ -6,12 +6,12 @@ class NewMeeting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subject: "",
-      descripcion: "",
+      name: "",
+      description: "",
       date_start: "",
       date_end: "",
-      host: "",
-      attendants: ""
+      host: 1,
+      attendants: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -20,12 +20,39 @@ class NewMeeting extends Component {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    this.setState({
-      [name]: value,
-    });
+    name === "attendants"
+      ? this.setState({ attendants: value.split(",") })
+      : this.setState({
+          [name]: value,
+        });
   }
   handleSubmit(event) {
     console.log(this.state);
+    fetch("http://localhost:5000/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query:
+        `mutation {
+          addMeeting(
+            addMeeting: {
+              name: `+ JSON.stringify(this.state.name) + `
+              description: `+ JSON.stringify(this.state.description) + `
+              date_start: `+ JSON.stringify(this.state.date_start) + `
+              date_end: `+ JSON.stringify(this.state.date_end) + `
+              host: 1
+              attendants: [`+ this.state.attendants + `]
+            }
+          ){
+            link
+          }
+        }`
+      }),
+    })
+      .then((response) => response.json())
+      .then((query) => {
+        console.log(query.data);
+      });
     event.preventDefault();
   }
 
@@ -38,17 +65,18 @@ class NewMeeting extends Component {
         <CardBody>
           <Form>
             <FormGroup row>
-              <Label htmlFor="subject" md={12}>
+              <Label htmlFor="name" md={12}>
                 Subject:
               </Label>
               <Col md={12}>
                 <Input
                   type="subject"
-                  id="subject"
-                  name="subject"
+                  id="name"
+                  name="name"
                   placeholder="Subject"
-                  value={this.state.subject}
+                  value={this.state.name}
                   onChange={this.handleInputChange}
+                  required
                 />
               </Col>
             </FormGroup>
@@ -64,6 +92,7 @@ class NewMeeting extends Component {
                   placeholder="Description"
                   value={this.state.description}
                   onChange={this.handleInputChange}
+                  required
                 />
               </Col>
             </FormGroup>
@@ -78,6 +107,7 @@ class NewMeeting extends Component {
                   name="date_start"
                   value={this.state.date_start}
                   onChange={this.handleInputChange}
+                  required
                 />
               </Col>
             </FormGroup>
@@ -92,28 +122,34 @@ class NewMeeting extends Component {
                   name="date_end"
                   value={this.state.date_end}
                   onChange={this.handleInputChange}
+                  required
                 />
               </Col>
             </FormGroup>
             <FormGroup row>
               <Label htmlFor="attendants" md={12}>
-              Attendants:
+                Attendants:
               </Label>
               <Col md={12}>
                 <Input
                   type="email"
                   id="attendants"
                   name="attendants"
-                  placeholder = "Emails separated by comas"
+                  placeholder="Emails separated by comas"
                   value={this.state.attendants}
                   onChange={this.handleInputChange}
+                  required
                   multiple
                 />
               </Col>
             </FormGroup>
             <FormGroup row>
               <Col md={{ size: 12 }}>
-                <Button type="submit" color="primary">
+                <Button
+                  type="button"
+                  color="primary"
+                  onClick={this.handleSubmit}
+                >
                   Create Meeting
                 </Button>
               </Col>
@@ -126,3 +162,14 @@ class NewMeeting extends Component {
 }
 
 export default NewMeeting;
+/* name:" ` +
+          this.state.name +
+          `" description: ` +
+          this.state.description +
+          `date_start: ` +
+          this.state.date_start +
+          `date_end:` +
+          this.state.date_end +
+          `host: 1 attendants: ` +
+          this.state.attendants +
+          ` */
