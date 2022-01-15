@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardGroup,
@@ -9,11 +9,14 @@ import {
   Button,
 } from "reactstrap";
 
+import Day from "./Day";
+
 class Days extends React.Component {
   render() {
+    //this.props.meetings.map((meeting) =>(console.log(meeting))
+    var mydays = new Array(5);
     const today = new Date();
-
-    const days = [
+    const namesDays = [
       "Sunday",
       "Monday",
       "Tuesday",
@@ -22,14 +25,28 @@ class Days extends React.Component {
       "Friday",
       "Saturday",
     ];
-    let mydays = [];
-    for (let i = 0; i < 5; i++) {
+    for (var i = 0; i < mydays.length; i++) {
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + i);
-      mydays.push(days[tomorrow.getDay()]);
+      mydays[i] = { day: namesDays[tomorrow.getDay()], meetings:[]};
+      for (let meeting in this.props.meetings) {
+        const meetingtimestamp = Date.parse(this.props.meetings[meeting].date_start);
+        const meetingdatetime = new Date(meetingtimestamp);
+        const date = meetingdatetime.getUTCDate();
+        const month = meetingdatetime.getUTCMonth();
+        const year = meetingdatetime.getUTCFullYear();
+        console.log(this.props.meetings[meeting])
+        if (
+          tomorrow.getDate() === date &&
+          tomorrow.getMonth() === month &&
+          tomorrow.getFullYear() === year
+        ) {
+          mydays[i].meetings.push(this.props.meetings[meeting]);
+        }
+      }
     }
-
-    const daystorender = mydays.map((day, index, date) => (
+    console.log(mydays);
+    const daystorender = mydays.map((day, index) => (
       <Card
         key={index}
         inverse
@@ -40,23 +57,24 @@ class Days extends React.Component {
         }}
       >
         <CardBody>
-          <CardTitle tag="h5">{day}</CardTitle>
+          <CardTitle tag="h5"></CardTitle>
           <CardSubtitle className="mb-2" tag="h6">
-            FECHA
+            {day.day}
           </CardSubtitle>
           <CardText tag="small">
-            <ul>
-              <li>Evento 1</li>
-              <li>Evento 2</li>
-              <li>Evento 3</li>
-              <li>Evento 4</li>
-            </ul>
+            <Day meetings={day.meetings} />
           </CardText>
         </CardBody>
       </Card>
     ));
     return (
-      <CardGroup style={{ backgroundColor: "#144B7D", margin: "1rem", borderRadius:"1rem" }}>
+      <CardGroup
+        style={{
+          backgroundColor: "#144B7D",
+          margin: "1rem",
+          borderRadius: "1rem",
+        }}
+      >
         {daystorender}
       </CardGroup>
     );
