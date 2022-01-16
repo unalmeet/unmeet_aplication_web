@@ -28,6 +28,42 @@ class Register extends Component {
         event.preventDefault();
     }
 
+    sendForm(){
+        const FILMS_QUERY=`mutation
+        {
+            login(loginUser:{
+                user:${this.state.user}
+                email:${this.state.email},
+                password:${this.state.password}
+                password_confirmation:${this.state.password_confirmation}
+            })
+            {email,name,token}
+        }`
+
+        fetch("http://localhost:5000/graphql",{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({query:FILMS_QUERY})  
+        })
+        .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Error fetching data");
+            } else {
+              return response.json();
+            }
+          })
+          .then((data) =>this.answerForm(data.data));
+        
+    }
+    answerForm(data){
+        const {email, name, token} = data;
+        this.setState({email:email, user:name, token:token})
+        if(this.state.token!='')
+            this.props.answer(this.state.email,this.state.token,this.state.user)
+
+    }
+    
+
     render(){
         return(
             <div className="text-center"> 

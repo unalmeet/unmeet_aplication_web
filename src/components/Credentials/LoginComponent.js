@@ -1,7 +1,6 @@
-import React, {Component} from 'react';
+import React, {useEffect,Component} from 'react';
 import {Button, Form,FormGroup,Label, Input, Col, CardHeader } from 'reactstrap';
 import {Card, CardBody}  from 'reactstrap';
-
 
 
 class Login extends Component {
@@ -9,11 +8,13 @@ class Login extends Component {
         super(props);
         this.state={
             email:'',
+            user:'',
             password:'',
             token:''
         }
-        this.handleSubmit=this.handleSubmit.bind(this);
+       
         this.handleInputChange=this.handleInputChange.bind(this);
+        this.sendForm=this.sendForm.bind(this);
     }
     handleInputChange(event){
         const target =event.target;
@@ -23,13 +24,44 @@ class Login extends Component {
             [name]:value
         }) 
     }
-    handleSubmit(event){
-        console.log(this.state);
+    sendForm(event){
+        const FILMS_QUERY=`mutation
+        {
+            login(loginUser:{
+                email:"${this.state.email}",
+                password:"${this.state.password}"
+            })
+            {email,name,token}
+        }`
+
+        fetch('http://localhost:5000/graphql',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({query:FILMS_QUERY})  
+        })
+        .then((response) => {
+            if (response.status >= 400) {
+                console.log(response);
+              throw new Error("Error fetching data");
+            } else {
+              return response.json();
+            }
+          })
+        .then((data) =>{
+            this.answerForm(event,data.data)
+        });
+
         event.preventDefault();
+        
     }
+    answerForm(event,data){
+        data=data.login;
+        this.setState({email:data.email, user:data.name, token:data.token})
+        return this.props.answer(this.state.user,this.state.email,this.state.token);
+    } 
+    
 
     render(){
-    
         return(
             <div className="text-center"> 
             
@@ -37,7 +69,7 @@ class Login extends Component {
                     <h4 className="text-title text-white">Login</h4>
                 </CardHeader>
                 <CardBody>
-                    <Form onSubmit={(event)=>{this.props.answer(event,this.state.email)}} >
+                    <Form onSubmit={(event)=>{this.sendForm(event)}} >
                         <FormGroup row>
                             <Label htmlFor="email" md={12}>Email:</Label>
                             <Col md={12}>
