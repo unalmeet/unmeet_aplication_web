@@ -28,21 +28,23 @@ class Register extends Component {
         event.preventDefault();
     }
 
-    sendForm(){
+    sendForm(event){
+        console.log(this.state);
         const FILMS_QUERY=`mutation
         {
-            login(loginUser:{
-                user:${this.state.user}
-                email:${this.state.email},
-                password:${this.state.password}
-                password_confirmation:${this.state.password_confirmation}
+            register(registerUser:{
+                name:"${this.state.user}",
+                email:"${this.state.email}",
+                password:"${this.state.password}",
+                password_confirmation:"${this.state.password_confirmation}"
             })
             {email,name,token}
         }`
+        
 
-        fetch("http://localhost:5000/graphql",{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
+        fetch('http://localhost:5000/graphql',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
             body: JSON.stringify({query:FILMS_QUERY})  
         })
         .then((response) => {
@@ -53,15 +55,15 @@ class Register extends Component {
             }
           })
           .then((data) =>this.answerForm(data.data));
-        
+
+        event.preventDefault();
     }
     answerForm(data){
-        const {email, name, token} = data;
-        this.setState({email:email, user:name, token:token})
-        if(this.state.token!='')
-            this.props.answer(this.state.email,this.state.token,this.state.user)
-
-    }
+        console.log(data);
+        data=data.register;
+        this.setState({email:data.email, user:data.name, token:data.token})
+        return this.props.answer(this.state.user,this.state.email,this.state.token);
+    } 
     
 
     render(){
@@ -72,11 +74,11 @@ class Register extends Component {
                     <h4 className="text-title text-white">Register</h4>
                 </CardHeader>
                 <CardBody>
-                    <Form>
+                    <Form onSubmit={(event)=>{this.sendForm(event)}}>
                         <FormGroup row>
                             <Label htmlFor="user" md={12}>User Name:</Label>
                             <Col md={12}>
-                            <Input type="name" id="user" name="user" placeholder="User Name" value={this.state.user}
+                            <Input type="text" id="user" name="user" placeholder="User Name" value={this.state.user}
                             onChange={this.handleInputChange}/> 
                             </Col>
                         </FormGroup>
