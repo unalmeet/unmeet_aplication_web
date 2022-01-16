@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Calendar from './CalendarPage/CalendarComponent';
 import Home from './HomePage/HomeComponent';
 import InMeeting from './InMeetingPage/InMeetingComponent';
+import {AuthProvider} from "./core";
 
 
 class Main extends Component {
@@ -14,8 +15,21 @@ class Main extends Component {
           token:''
         };
     }
+    componentDidMount() {
+      const user_meet = window.localStorage.getItem('user_meet');
+      const user = JSON.parse(user_meet);
+      if(user!=null){
+        this.setState({user:user.user, email:user.email, token:user.token})
+      }
+      console.log(user);
+    }
     credentialLogin(user, email, token){
-      console.log("listo")
+      let user_meet={
+        user:user,
+        email:email,
+        token:token
+      }
+      window.localStorage.setItem('user_meet',JSON.stringify(user_meet));
       return this.setState({user:user,email:email, token:token});
     }
     

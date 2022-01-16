@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import Login from "../Credentials/LoginComponent";
 import Register from "../Credentials/RegisterComponent";
 import ModalLateral from "./Modal-Lateral";
-
 import { Logo } from "../Logo";
 import { Button } from "../Button";
+
+
 
 class Home extends Component {
   constructor(props) {
@@ -16,6 +17,8 @@ class Home extends Component {
     };
     
   }
+
+  
   answerCredentials(user,email, token){
     if(token!="" || token != undefined)
       return this.props.credentials(user,email, token)

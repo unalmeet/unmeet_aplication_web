@@ -48,13 +48,14 @@ class Login extends Component {
             }
           })
         .then((data) =>{
-            this.answerForm(event,data.data)
+            this.answerForm(data.data)
         });
 
         event.preventDefault();
         
     }
-    answerForm(event,data){
+    answerForm(data){
+        console.log(data);
         data=data.login;
         this.setState({email:data.email, user:data.name, token:data.token})
         return this.props.answer(this.state.user,this.state.email,this.state.token);
