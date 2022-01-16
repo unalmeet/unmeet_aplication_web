@@ -29,8 +29,11 @@ class Calendar extends React.Component {
           listMeetings{
             link
             name
+            description
             attendants
             date_start
+            date_end
+            host
           }
         }    
       `,
@@ -68,14 +71,23 @@ class Calendar extends React.Component {
                 />
               </CardBody>
             </Card>
-          </div>
-          <div className="calendar_meeting_buttons">
-            <ModalBoton boton="New Meeting" color= "#029ACA" content={newMeeting} />
-            <ModalBoton boton="Join Meeting" color= "#029ACA" content={joinMeeting} />
             <div className="calendar_cammic_buttons">
-              <MicButton width={100} height={100} />
-              <CamButton width={100} height={100} />
-            </div>
+            <MicButton width={100} height={100} />
+            <CamButton width={100} height={100} />
+          </div>
+          </div>
+          
+          <div className="calendar_meeting_buttons">
+            <ModalBoton
+              boton="New Meeting"
+              color="#029ACA"
+              content={newMeeting}
+            />
+            <ModalBoton
+              boton="Join Meeting"
+              color="#029ACA"
+              content={joinMeeting}
+            />
           </div>
         </div>
       </div>
