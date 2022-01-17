@@ -1,52 +1,55 @@
 {
-  "name": "unalmeet_web",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.4",
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.16",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "bootstrap": "^5.1.3",
-    "bootstrap-social": "^5.1.1",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.3.1",
-    "popper.js": "^1.12.9",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-konva": "^17.0.2-5",
-    "react-router-dom": "4.2.2",
-    "react-scripts": "5.0.0",
-    "react-spring": "^9.4.2",
-    "reactjs-popup": "^2.0.5",
-    "reactstrap": "^9.0.1",
-    "web-vitals": "^2.1.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "unalmeet_web",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.4",
+        "@fortawesome/fontawesome-svg-core": "^1.2.36",
+        "@fortawesome/free-solid-svg-icons": "^5.15.4",
+        "@fortawesome/react-fontawesome": "^0.1.16",
+        "@testing-library/jest-dom": "^5.14.1",
+        "@testing-library/react": "^12.0.0",
+        "@testing-library/user-event": "^13.2.1",
+        "bootstrap": "^5.1.3",
+        "@apollo/client": "^3.5.7",
+        "apollo-boost": "^0.4.9",
+        "bootstrap-social": "^5.1.1",
+        "font-awesome": "^4.7.0",
+        "graphql": "^14.7.0",
+        "jquery": "^3.3.1",
+        "popper.js": "^1.12.9",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-konva": "^17.0.2-5",
+        "react-router-dom": "4.2.2",
+        "react-scripts": "5.0.0",
+        "react-spring": "^9.4.2",
+        "reactjs-popup": "^2.0.5",
+        "reactstrap": "^9.0.1",
+        "web-vitals": "^2.1.0"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }

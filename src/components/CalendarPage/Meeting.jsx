@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   CardGroup,
   Card,
   CardBody,
@@ -8,10 +9,53 @@ import {
   CardSubtitle,
   CardFooter,
 } from "reactstrap";
+
+import { faTrashAlt, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 class Meeting extends React.Component {
+  
   joinMeeting(link) {
     console.log(link);
   }
+
+  inviteUser(link) {
+    fetch("http://localhost:5000/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query:
+        `mutation {
+          addAttendant(link:`+ JSON.stringify(link) +`, idAttendant:1){
+            link
+            attendants
+          }
+        }`
+      }),
+    })
+      .then((response) => response.json())
+      .then((query) => {
+        console.log(query.data);
+      });
+  }
+
+  removeMeeting(link) {
+    fetch("http://localhost:5000/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query:
+        `mutation {
+          removeMeeting(link:"`+link+`")
+        }`
+      }),
+    })
+      .then((response) => response.json())
+      .then((query) => {
+        console.log(query.data);
+      });
+  }
+
   render() {
     let meetings = this.props.meetings.sort(
       (a, b) => Date.parse(a.date_start) - Date.parse(b.date_start)
@@ -49,8 +93,10 @@ class Meeting extends React.Component {
           borderRadius: "1rem",
         }}
       >
-        <CardBody onClick={() => this.joinMeeting(meeting)}>
-          <CardTitle tag="h5">{meeting.name}</CardTitle>
+        <CardBody>
+          <CardTitle tag="h5" onClick={() => this.joinMeeting(meeting)}>
+            {meeting.name}
+          </CardTitle>
           <CardSubtitle className="mb-2" tag="h6">
             {meeting.date_start} - {meeting.date_end}
           </CardSubtitle>
@@ -61,10 +107,22 @@ class Meeting extends React.Component {
           <div>
             <CardFooter>Hosted by: {meeting.host}</CardFooter>
           </div>
+          <Button
+            style={{ backgroundColor: "white" }}
+            onClick={() => this.removeMeeting(meeting.link)}
+          >
+            <FontAwesomeIcon icon={faTrashAlt} color="#029ACA" />
+          </Button>
+          <Button
+            style={{ backgroundColor: "white" }}
+            onClick={() => this.inviteUser(meeting.link)}
+          >
+            <FontAwesomeIcon icon={faUserPlus} color="#029ACA" />
+          </Button>
         </CardBody>
       </Card>
     ));
-    return <div>{rendermeetings}</div>;
+    return <CardGroup>{rendermeetings}</CardGroup>;
   }
 }
 export default Meeting;

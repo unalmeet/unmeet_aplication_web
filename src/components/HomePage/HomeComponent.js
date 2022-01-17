@@ -18,22 +18,21 @@ class Home extends Component {
       token: "",
     };
   }
-  answerCredentials(event, email) {
-    this.setState({ email: "email" });
-
-    if (email != "") {
-      this.props.credentials(this.state.email);
-    }
-    event.preventDefault();
+  answerCredentials(user,email, token){
+    if(token!="" || token != undefined)
+      return this.props.credentials(user,email, token)
   }
 
+
+
+
+
   render() {
-    const login = (
-      <Login answer={(event, email) => this.answerCredentials(event, email)} />
-    );
-    const register = <Register className="bg-primary" />;
     const newMeeting = <NewMeeting className="bg-primary" />;
     const joinMeeting = <JoinMeeting className="bg-primary" />;
+
+    const login=<Login answer={(user,email, token)=>this.answerCredentials(user,email, token)}/>;
+    const register=<Register answer={(user,email, token)=>this.answerCredentials(user,email, token)}/>;
 
     return (
       <div className="col-12 col-md-12">
