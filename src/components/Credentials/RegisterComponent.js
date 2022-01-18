@@ -38,7 +38,7 @@ class Register extends Component {
                 password:"${this.state.password}",
                 password_confirmation:"${this.state.password_confirmation}"
             })
-            {email,name,token}
+            {id,email,name,token}
         }`
         
 
@@ -60,9 +60,9 @@ class Register extends Component {
     }
     answerForm(data){
         console.log(data);
-        data=data.register;
-        this.setState({email:data.email, user:data.name, token:data.token})
-        return this.props.answer(this.state.user,this.state.email,this.state.token);
+        data=data.login;
+        this.setState({id:data.id,email:data.email, user:data.name, token:data.token})
+        return this.props.answer(this.state.id,this.state.user,this.state.email,this.state.token);
     } 
     
 

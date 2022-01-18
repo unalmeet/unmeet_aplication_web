@@ -19,9 +19,10 @@ class Home extends Component {
   }
 
   
-  answerCredentials(user,email, token){
+  answerCredentials(id, user,email, token){
+    
     if(token!="" || token != undefined)
-      return this.props.credentials(user,email, token)
+      return this.props.credentials(id, user,email, token)
   }
 
 
@@ -30,8 +31,8 @@ class Home extends Component {
 
   render() {
 
-    const login=<Login answer={(user,email, token)=>this.answerCredentials(user,email, token)}/>;
-    const register=<Register answer={(user,email, token)=>this.answerCredentials(user,email, token)}/>;
+    const login=<Login answer={(id, user,email, token)=>this.answerCredentials(id, user,email, token)}/>;
+    const register=<Register answer={(id, user,email, token)=>this.answerCredentials(id, user,email, token)}/>;
 
     return (
       <div className="col-12 col-md-12">
