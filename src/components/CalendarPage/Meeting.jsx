@@ -1,4 +1,6 @@
 import React from "react";
+import UserContext from "../UserContext";
+import { Link } from "react-router-dom";
 import {
   Button,
   CardGroup,
@@ -14,10 +16,7 @@ import { faTrashAlt, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Meeting extends React.Component {
-  
-  joinMeeting(link) {
-    console.log(link);
-  }
+  static contextType = UserContext
 
   inviteUser(link) {
     fetch("http://localhost:5000/graphql", {
@@ -25,12 +24,14 @@ class Meeting extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query:
-        `mutation {
-          addAttendant(link:`+ JSON.stringify(link) +`, idAttendant:1){
+          `mutation {
+          addAttendant(link:` +
+          JSON.stringify(link) +
+          `, idAttendant:1){
             link
             attendants
           }
-        }`
+        }`,
       }),
     })
       .then((response) => response.json())
@@ -45,9 +46,11 @@ class Meeting extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query:
-        `mutation {
-          removeMeeting(link:"`+link+`")
-        }`
+          `mutation {
+          removeMeeting(link:"` +
+          link +
+          `")
+        }`,
       }),
     })
       .then((response) => response.json())
@@ -57,6 +60,7 @@ class Meeting extends React.Component {
   }
 
   render() {
+    const user = this.context;
     let meetings = this.props.meetings.sort(
       (a, b) => Date.parse(a.date_start) - Date.parse(b.date_start)
     );
@@ -88,14 +92,14 @@ class Meeting extends React.Component {
         key={meeting.link}
         inverse
         style={{
-          backgroundColor: "#029ACA",
+          backgroundColor: meeting.host == user ? "#144B7D" : "#029ACA",
           margin: "1rem",
           borderRadius: "1rem",
         }}
       >
         <CardBody>
-          <CardTitle tag="h5" onClick={() => this.joinMeeting(meeting)}>
-            {meeting.name}
+          <CardTitle tag="h5">
+            <Link to={`/inmeeting/${meeting.link}`} style={{ color: 'white' }}>{meeting.name}</Link>
           </CardTitle>
           <CardSubtitle className="mb-2" tag="h6">
             {meeting.date_start} - {meeting.date_end}
@@ -107,22 +111,26 @@ class Meeting extends React.Component {
           <div>
             <CardFooter>Hosted by: {meeting.host}</CardFooter>
           </div>
-          <Button
-            style={{ backgroundColor: "white" }}
-            onClick={() => this.removeMeeting(meeting.link)}
-          >
-            <FontAwesomeIcon icon={faTrashAlt} color="#029ACA" />
-          </Button>
-          <Button
-            style={{ backgroundColor: "white" }}
-            onClick={() => this.inviteUser(meeting.link)}
-          >
-            <FontAwesomeIcon icon={faUserPlus} color="#029ACA" />
-          </Button>
+          {meeting.host == user && (
+            <div>
+              <Button
+                style={{ backgroundColor: "white" }}
+                onClick={() => this.removeMeeting(meeting.link)}
+              >
+                <FontAwesomeIcon icon={faTrashAlt} color="#029ACA" />
+              </Button>
+              <Button
+                style={{ backgroundColor: "white" }}
+                onClick={() => this.inviteUser(meeting.link)}
+              >
+                <FontAwesomeIcon icon={faUserPlus} color="#029ACA" />
+              </Button>
+            </div>
+          )}
         </CardBody>
       </Card>
     ));
-    return <CardGroup>{rendermeetings}</CardGroup>;
+    return <div>{rendermeetings}</div>;
   }
 }
 export default Meeting;
