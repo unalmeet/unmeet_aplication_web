@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Calendar from './CalendarPage/CalendarComponent';
 import Home from './HomePage/HomeComponent';
 import InMeeting from './InMeetingPage/InMeetingComponent';
+import Header from './Header/HeaderComponent';
 
 
 
@@ -34,6 +35,18 @@ class Main extends Component {
       window.localStorage.setItem('user_meet',JSON.stringify(user_meet));
       return this.setState({id:id,user:user,email:email, token:token});
     }
+    credentialLogout(message){
+      if(message.logout.message=='Logout seccessfull'){
+        window.localStorage.removeItem('user_meet');
+        this.setState({
+          id:'',
+          user:'',
+          email:'',
+          token:''
+        })
+
+      }
+    }
     
 
     
@@ -46,23 +59,24 @@ class Main extends Component {
           <Redirect to="/home"/>
         </Switch>);
       const protectedComponent =(
-        <Switch>
-          <Route  path={"/calendar/"+this.state.user} component={()=><Calendar user={this.state}/>}/>
-          <Route  path={"/inmeeting/"+this.state.user} component={()=><InMeeting user={this.state}/>}/>
-          <Redirect to={"/calendar/"+this.state.user}/>
-        </Switch> );
+        
+          <Switch>
+            <Route  path={"/calendar/"+this.state.user} component={()=><Calendar user={this.state}/>}/>
+            <Route  path={"/inmeeting/"+this.state.user} component={()=><InMeeting user={this.state}/>}/>
+            <Redirect to={"/calendar/"+this.state.user}/>
+          </Switch>
+         );
       
       const ProtectedRoute= isLogin==false ? home:protectedComponent;
         
         
 
-        
-      console.log(ProtectedRoute)
       return (
         <div className="App row text-center">
-          <Switch>
+          <div className="col-12 col-md-12">
+            <Header token={this.state.token} answer={(message)=>this.credentialLogout(message)}/>
             {ProtectedRoute}
-          </Switch>
+          </div>
         </div>
       );
     }

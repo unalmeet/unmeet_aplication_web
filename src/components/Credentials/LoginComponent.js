@@ -55,9 +55,7 @@ class Login extends Component {
         
     }
     answerForm(data){
-        console.log(data);
         data=data.login;
-        console.log(data);
         this.setState({id:data.id,email:data.email, user:data.name, token:data.token})
         return this.props.answer(this.state.id,this.state.user,this.state.email,this.state.token);
     } 

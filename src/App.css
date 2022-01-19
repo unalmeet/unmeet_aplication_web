@@ -1,5 +1,6 @@
 :root{
     --primary-color:#144b7d;
+    --secondary-color:#029aca;
     
 }
 .Button {
@@ -90,4 +91,8 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+.jumbotron2{
+    padding: 1rem 1rem;
+    background-color:var(--primary-color);
 }
