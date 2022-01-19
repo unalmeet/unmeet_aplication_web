@@ -9,6 +9,8 @@ import ModalBoton from "./Modal-Boton";
 import { Logo } from "../Logo";
 import { Button } from "../Button";
 
+
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -18,9 +20,12 @@ class Home extends Component {
       token: "",
     };
   }
-  answerCredentials(user,email, token){
+
+  
+  answerCredentials(id, user,email, token){
+    
     if(token!="" || token != undefined)
-      return this.props.credentials(user,email, token)
+      return this.props.credentials(id, user,email, token)
   }
 
 
@@ -31,8 +36,8 @@ class Home extends Component {
     const newMeeting = <NewMeeting className="bg-primary" />;
     const joinMeeting = <JoinMeeting className="bg-primary" />;
 
-    const login=<Login answer={(user,email, token)=>this.answerCredentials(user,email, token)}/>;
-    const register=<Register answer={(user,email, token)=>this.answerCredentials(user,email, token)}/>;
+    const login=<Login answer={(id, user,email, token)=>this.answerCredentials(id, user,email, token)}/>;
+    const register=<Register answer={(id, user,email, token)=>this.answerCredentials(id, user,email, token)}/>;
 
     return (
       <div className="col-12 col-md-12">

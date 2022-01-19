@@ -31,7 +31,7 @@ class Login extends Component {
                 email:"${this.state.email}",
                 password:"${this.state.password}"
             })
-            {email,name,token}
+            {id,email,name,token}
         }`
 
         fetch('http://localhost:5000/graphql',{
@@ -48,16 +48,18 @@ class Login extends Component {
             }
           })
         .then((data) =>{
-            this.answerForm(event,data.data)
+            this.answerForm(data.data)
         });
 
         event.preventDefault();
         
     }
-    answerForm(event,data){
+    answerForm(data){
+        console.log(data);
         data=data.login;
-        this.setState({email:data.email, user:data.name, token:data.token})
-        return this.props.answer(this.state.user,this.state.email,this.state.token);
+        console.log(data);
+        this.setState({id:data.id,email:data.email, user:data.name, token:data.token})
+        return this.props.answer(this.state.id,this.state.user,this.state.email,this.state.token);
     } 
     
 
