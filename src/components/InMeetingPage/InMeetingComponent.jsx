@@ -12,7 +12,8 @@ import {
     faDesktop, 
     faPhoneSlash,
     faLaugh,
-    faPaperPlane
+    faPaperPlane,
+    faRecordVinyl
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -34,6 +35,101 @@ const UserBox = props => {
 }
 
 const Controls = () => {
+
+    const videoElement = document.getElementsByTagName("video")[0];
+    const downloadLink = document.getElementById('download');
+
+    let active = false
+    let stream;
+    let mimeType;
+
+    const handleRecord = function () {
+        // startRecord()
+
+        // $('.btn-info').prop('disabled', true);
+        //$('#stop').prop('disabled', false);
+        //$('#download').css('display', 'none')
+
+        let recordedChunks = [];
+        
+        const mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = function (e) {
+            if (e.data.size > 0) {
+                recordedChunks.push(e.data);
+            }
+
+            if (!active){
+                mediaRecorder.stop();
+                active = false
+            } 
+            
+        };
+
+        mediaRecorder.onstop = function () {
+            alert('onsttop')
+            const blob = new Blob(recordedChunks, {
+                type: mimeType
+            });
+            recordedChunks = []
+            const filename = window.prompt('Enter file name');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${filename || 'recording'}.webm`;
+            
+            // stopRecord();
+            // $('.btn-info').prop('disabled', false);
+            // $('#stop').prop('disabled', true);
+            // $('#download').css('display', 'block')
+            
+            videoElement.srcObject = null;
+        };
+
+        mediaRecorder.start(200);
+    };
+
+    async function recordScreen() {
+        mimeType = 'video/webm';
+
+        if(!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
+            return window.alert('Screen Record not supported!')
+        }
+
+        stream = null;
+
+        let displayStream = await navigator.mediaDevices.getDisplayMedia({video: {cursor: "motion"}, audio: {'echoCancellation': true}});
+
+        if(window.confirm("Record audio with screen?")){
+            const audioContext = new AudioContext();
+
+            const voiceStream = await navigator.mediaDevices.getUserMedia({ audio: {'echoCancellation': true}, video: false });
+            const userAudio = audioContext.createMediaStreamSource(voiceStream);
+            
+            const audioDestination = audioContext.createMediaStreamDestination();
+            userAudio.connect(audioDestination);
+
+            if(displayStream.getAudioTracks().length > 0) {
+                const displayAudio = audioContext.createMediaStreamSource(displayStream);
+                displayAudio.connect(audioDestination);
+            }
+
+            const tracks = [...displayStream.getVideoTracks(), ...audioDestination.stream.getTracks()]
+            stream = new MediaStream(tracks);
+            handleRecord()
+        } else {
+            stream = displayStream;
+            handleRecord();
+        };
+        videoElement.srcObject = stream;
+    }
+
+    const handleRecordScreen = () => {
+        if(!active){
+            active = true
+            recordScreen()
+        } else {
+            handleRecord()
+        }
+    }
 
     const [ controls, setControls ] = useState([
         {
@@ -78,6 +174,14 @@ const Controls = () => {
         },
         {
             id: 6,
+            name: 'record-screen',
+            action: (isActive) => handleRecordScreen(isActive),
+            isActive: false,
+            activeIcon: faRecordVinyl,
+            disabledIcon: faRecordVinyl
+        },
+        {
+            id: 7,
             name: 'end-call',
             action: (isActive) => alert('end-call control press' + isActive),
             isActive: false,
@@ -94,6 +198,15 @@ const Controls = () => {
     }
 
     return <Fragment>
+
+        <a id="download">
+            <button type="button">
+                Download
+            </button>
+        </a>
+
+        <video autoplay="" height="480" width="640" muted="" className='hidden'></video>
+
         {
             controls.map((control, index) => (
                 <div onClick={() => handleControlClick(index)} className={`action-button ${control.isActive ? 'active' : 'disabled'}`}>
