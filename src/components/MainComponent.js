@@ -47,11 +47,13 @@ class Main extends Component {
 
       }
     }
+
     
 
     
     render(){
-
+      const Meet= ({match})=><InMeeting url={parseInt(match.params.url)}/>
+      
       const isLogin = this.state.token!="" ? true:false;
       const home =(
         <Switch>
@@ -62,7 +64,7 @@ class Main extends Component {
         
           <Switch>
             <Route  path={"/calendar/"+this.state.user} component={()=><Calendar user={this.state}/>}/>
-            <Route  path={"/inmeeting/"+this.state.user} component={()=><InMeeting user={this.state}/>}/>
+            <Route  path="/inmeeting/:url" component={Meet}/>
             <Redirect to={"/calendar/"+this.state.user}/>
           </Switch>
          );
