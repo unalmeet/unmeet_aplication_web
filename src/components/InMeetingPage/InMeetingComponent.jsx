@@ -283,7 +283,7 @@ const ChatMessages = () => {
         },
         {
             id: 4,
-            message: "message 4 fsd fsd sfd ds fsdf dsf dsf dsf sf",
+            message: "message 4",
             from: "user 4"
         }
     ]
