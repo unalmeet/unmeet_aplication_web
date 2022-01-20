@@ -71,8 +71,6 @@ class Main extends Component {
       
       const ProtectedRoute= isLogin== false ? home:protectedComponent;
         
-        
-
       return (
         <div className="App row text-center">
           <div className="col-12 col-md-12">

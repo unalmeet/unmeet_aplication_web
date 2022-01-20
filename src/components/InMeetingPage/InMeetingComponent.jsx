@@ -13,7 +13,8 @@ import {
     faPhoneSlash,
     faLaugh,
     faPaperPlane,
-    faRecordVinyl
+    faRecordVinyl,
+    faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -36,100 +37,101 @@ const UserBox = props => {
 
 const Controls = () => {
 
-    const videoElement = document.getElementsByTagName("video")[0];
-    const downloadLink = document.getElementById('download');
-
     let active = false
-    let stream;
     let mimeType;
 
-    const handleRecord = function () {
-        // startRecord()
+    let stream = null,
+	audio = null,
+	mixedStream = null,
+	chunks = [], 
+	recorder = null,
+	startButton = null,
+	stopButton = null,
+	downloadButton = null;
 
-        // $('.btn-info').prop('disabled', true);
-        //$('#stop').prop('disabled', false);
-        //$('#download').css('display', 'none')
 
-        let recordedChunks = [];
-        
-        const mediaRecorder = new MediaRecorder(stream);
+    async function setupStream () {
 
-        mediaRecorder.ondataavailable = function (e) {
-            if (e.data.size > 0) {
-                recordedChunks.push(e.data);
-            }
-
-            if (!active){
-                mediaRecorder.stop();
-                active = false
-            } 
-            
-        };
-
-        mediaRecorder.onstop = function () {
-            alert('onsttop')
-            const blob = new Blob(recordedChunks, {
-                type: mimeType
+        try {
+            stream = await navigator.mediaDevices.getDisplayMedia({
+                video: true
             });
-            recordedChunks = []
-            const filename = window.prompt('Enter file name');
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = `${filename || 'recording'}.webm`;
-            
-            // stopRecord();
-            // $('.btn-info').prop('disabled', false);
-            // $('#stop').prop('disabled', true);
-            // $('#download').css('display', 'block')
-            
-            videoElement.srcObject = null;
-        };
+    
+            audio = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100,
+                },
+            });
 
-        mediaRecorder.start(200);
-    };
-
-    async function recordScreen() {
-        mimeType = 'video/webm';
-
-        if(!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
-            return window.alert('Screen Record not supported!')
-        }
-
-        stream = null;
-
-        let displayStream = await navigator.mediaDevices.getDisplayMedia({video: {cursor: "motion"}, audio: {'echoCancellation': true}});
-
-        if(window.confirm("Record audio with screen?")){
-            const audioContext = new AudioContext();
-
-            const voiceStream = await navigator.mediaDevices.getUserMedia({ audio: {'echoCancellation': true}, video: false });
-            const userAudio = audioContext.createMediaStreamSource(voiceStream);
-            
-            const audioDestination = audioContext.createMediaStreamDestination();
-            userAudio.connect(audioDestination);
-
-            if(displayStream.getAudioTracks().length > 0) {
-                const displayAudio = audioContext.createMediaStreamSource(displayStream);
-                displayAudio.connect(audioDestination);
-            }
-
-            const tracks = [...displayStream.getVideoTracks(), ...audioDestination.stream.getTracks()]
-            stream = new MediaStream(tracks);
-            handleRecord()
-        } else {
-            stream = displayStream;
-            handleRecord();
-        };
-        videoElement.srcObject = stream;
-    }
-
-    const handleRecordScreen = () => {
-        if(!active){
-            active = true
-            recordScreen()
-        } else {
-            handleRecord()
+        } catch (err) {
+            console.error(err)  
         }
     }
+    
+    function setupVideoFeedback() {
+        if (stream) {
+            const video = document.querySelector('.video-feedback');
+            video.srcObject = stream;  
+            video.play();
+        } else {
+            console.warn('No stream available');
+        }
+    }
+    
+    async function startRecording () {
+        await setupStream();
+    
+        if (stream && audio) {
+            mixedStream = new MediaStream([...stream.getTracks(), ...audio.getTracks()]);
+            recorder = new MediaRecorder(mixedStream);
+            recorder.ondataavailable = handleDataAvailable;
+            recorder.onstop = handleStop;
+            recorder.start(1000);
+        
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        
+            console.log('Recording started');
+        } else {
+            console.warn('No stream available.');
+        }
+    }
+    
+    function stopRecording () {
+        recorder.stop();
+    
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+    
+    function handleDataAvailable (e) {
+        chunks.push(e.data);
+    }
+    
+    function handleStop (e) {
+        const blob = new Blob(chunks, { 'type' : 'video/mp4' });
+        chunks = [];
+    
+        downloadButton.href = URL.createObjectURL(blob);
+        downloadButton.download = 'video.mp4';
+        downloadButton.disabled = false;
+    
+        stream.getTracks().forEach((track) => track.stop());
+        audio.getTracks().forEach((track) => track.stop());
+    
+        console.log('Recording stopped');
+    }
+    
+    window.addEventListener('load', () => {
+        startButton = document.querySelector('.start-recording');
+        stopButton = document.querySelector('.stop-recording');
+        downloadButton = document.querySelector('.download-video');
+    
+        startButton.addEventListener('click', startRecording);
+        stopButton.addEventListener('click', stopRecording);
+    })
 
     const [ controls, setControls ] = useState([
         {
@@ -174,19 +176,20 @@ const Controls = () => {
         },
         {
             id: 6,
-            name: 'record-screen',
-            action: (isActive) => handleRecordScreen(isActive),
-            isActive: false,
-            activeIcon: faRecordVinyl,
-            disabledIcon: faRecordVinyl
-        },
-        {
-            id: 7,
             name: 'end-call',
             action: (isActive) => alert('end-call control press' + isActive),
             isActive: false,
             activeIcon: faPhoneSlash,
             disabledIcon: faPhoneSlash
+        },
+        {
+            id: 7,
+            name: 'more-options',
+            action: (isActive) => alert('end-call control press' + isActive),
+            isActive: false,
+            activeIcon: faEllipsisH,
+            disabledIcon: faEllipsisH
+
         }
     ])
 
@@ -199,13 +202,9 @@ const Controls = () => {
 
     return <Fragment>
 
-        <a id="download">
-            <button type="button">
-                Download
-            </button>
-        </a>
+        
 
-        <video autoplay="" height="480" width="640" muted="" className='hidden'></video>
+ 
 
         {
             controls.map((control, index) => (
@@ -222,6 +221,21 @@ const Controls = () => {
 
 const ChatInput = () => {
     return <div className='chat-input'>
+        <a class="download-video">
+            <button type="button">
+                Download
+            </button>
+        </a>
+        <a class="start-recording">
+            <button type="button">
+                Start
+            </button>
+        </a>
+        <a class="stop-recording">
+            <button type="button">
+                Stop
+            </button>
+        </a>
         <FontAwesomeIcon icon={faLaugh} className='chat-input-emoji-icon' />
         <textarea name="textarea" rows="2" className='chat-input-text' />
         <FontAwesomeIcon icon={faPaperPlane}  className='chat-input-send-icon' />
