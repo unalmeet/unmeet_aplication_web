@@ -58,7 +58,7 @@ class Main extends Component {
           <Redirect to="/home"/>
         </Switch>);
       const protectedComponent =(
-        <UserContext.Provider value={1}>
+        <UserContext.Provider value={this.state.id}>
           <Switch>
             <Route  path={"/calendar/"+this.state.user} component={()=><Calendar user={this.state}/>}/>
             <Route  path="/inmeeting/:url" component={Meet}/>
@@ -67,7 +67,7 @@ class Main extends Component {
           </UserContext.Provider>
          );
       
-      const ProtectedRoute= isLogin==true ? home:protectedComponent;
+      const ProtectedRoute= isLogin== false ? home:protectedComponent;
         
         
 

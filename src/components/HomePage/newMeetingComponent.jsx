@@ -1,8 +1,18 @@
 import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, Col } from "reactstrap";
-import { Card, CardBody, CardFooter, CardHeader } from "reactstrap";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Col,
+  CardBody,
+  CardHeader,
+} from "reactstrap";
+import UserContext from "../UserContext";
 
 class NewMeeting extends Component {
+  static contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -10,13 +20,15 @@ class NewMeeting extends Component {
       description: "",
       date_start: "",
       date_end: "",
-      host: 1,
+      host: "",
       attendants: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
   handleInputChange(event) {
+    this.setState({ host: this.context });
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -27,26 +39,38 @@ class NewMeeting extends Component {
         });
   }
   handleSubmit(event) {
-    console.log(this.state);
-    fetch("http://localhost:5000/graphql", {
+    console.log(this.state)
+    fetch("http://34.122.205.216:8080/graphql", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Credentials": true },
       body: JSON.stringify({
         query:
-        `mutation {
+          `mutation {
           addMeeting(
             addMeeting: {
-              name: `+ JSON.stringify(this.state.name) + `
-              description: `+ JSON.stringify(this.state.description) + `
-              date_start: `+ JSON.stringify(this.state.date_start) + `
-              date_end: `+ JSON.stringify(this.state.date_end) + `
-              host: 1
-              attendants: [`+ this.state.attendants + `]
+              name: ` +
+          JSON.stringify(this.state.name) +
+          `
+              description: ` +
+          JSON.stringify(this.state.description) +
+          `
+              date_start: ` +
+          JSON.stringify(this.state.date_start) +
+          `
+              date_end: ` +
+          JSON.stringify(this.state.date_end) +
+          `
+              host: ` +
+          this.state.host +
+          `
+              attendants: [` +
+          this.state.attendants +
+          `]
             }
           ){
             link
           }
-        }`
+        }`,
       }),
     })
       .then((response) => response.json())
@@ -162,14 +186,3 @@ class NewMeeting extends Component {
 }
 
 export default NewMeeting;
-/* name:" ` +
-          this.state.name +
-          `" description: ` +
-          this.state.description +
-          `date_start: ` +
-          this.state.date_start +
-          `date_end:` +
-          this.state.date_end +
-          `host: 1 attendants: ` +
-          this.state.attendants +
-          ` */

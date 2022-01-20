@@ -42,7 +42,8 @@ class Calendar extends React.Component {
 
   componentDidMount() {
     const user = this.context;
-    fetch("http://localhost:5000/graphql", {
+    console.log(user)
+    fetch("http://34.122.205.216:8080/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

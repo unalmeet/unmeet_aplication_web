@@ -11,15 +11,17 @@ import {
   CardSubtitle,
   CardFooter,
 } from "reactstrap";
+import ModalBoton from "../HomePage/Modal-Boton";
+import NewMeeting from "../HomePage/newMeetingComponent";
 
 import { faTrashAlt, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Meeting extends React.Component {
-  static contextType = UserContext
+  static contextType = UserContext;
 
   inviteUser(link) {
-    fetch("http://localhost:5000/graphql", {
+    fetch("http://34.122.205.216:8080/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -41,7 +43,7 @@ class Meeting extends React.Component {
   }
 
   removeMeeting(link) {
-    fetch("http://localhost:5000/graphql", {
+    fetch("http://34.122.205.216:8080/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -86,7 +88,29 @@ class Meeting extends React.Component {
       x.attendants = meetings[i].attendants.toString();
       mymeetings.push(x);
     }
-
+    const newMeeting = <NewMeeting className="bg-primary" />;
+    let renderNoMeetings = (
+      <Card
+        style={{
+          backgroundColor: "#144B7D",
+          margin: "1rem",
+          borderRadius: "1rem",
+        }}
+        inverse
+      >
+        <CardBody>
+          <CardTitle tag="h5">No meetings scheduled</CardTitle>
+          <CardText>
+            <h6>Let's create a new meeting now </h6>
+            <ModalBoton
+              boton="New Meeting"
+              color="#029ACA"
+              content={newMeeting}
+            />
+          </CardText>
+        </CardBody>
+      </Card>
+    );
     let rendermeetings = mymeetings.map((meeting) => (
       <Card
         key={meeting.link}
@@ -99,7 +123,9 @@ class Meeting extends React.Component {
       >
         <CardBody>
           <CardTitle tag="h5">
-            <Link to={`/inmeeting/${meeting.link}`} style={{ color: 'white' }}>{meeting.name}</Link>
+            <Link to={`/inmeeting/${meeting.link}`} style={{ color: "white" }}>
+              {meeting.name}
+            </Link>
           </CardTitle>
           <CardSubtitle className="mb-2" tag="h6">
             {meeting.date_start} - {meeting.date_end}
@@ -130,7 +156,9 @@ class Meeting extends React.Component {
         </CardBody>
       </Card>
     ));
-    return <div>{rendermeetings}</div>;
+    return (
+      <div>{mymeetings.length === 0 ? renderNoMeetings : rendermeetings}</div>
+    );
   }
 }
 export default Meeting;

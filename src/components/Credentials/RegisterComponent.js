@@ -6,6 +6,7 @@ class Register extends Component {
     constructor(props){
         super(props);
         this.state={
+            id:'',
             user:'',
             email:'',
             password:'',
@@ -55,16 +56,37 @@ class Register extends Component {
             }
           })
           .then((data) =>this.answerForm(data.data));
-
+    
         event.preventDefault();
     }
     answerForm(data){
         console.log(data);
-        data=data.login;
+        data=data.register;
         this.setState({id:data.id,email:data.email, user:data.name, token:data.token})
+        const adminmeetinguser=`mutation
+        {
+            addUser(addUser:{
+                id:${data.id},
+            })
+            {id}
+        }`
+        
+
+        fetch('http://34.122.205.216:8080/graphql',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({query:adminmeetinguser})  
+        })
+        .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Error fetching data");
+            } else {
+              return response.json();
+            }
+          })
         return this.props.answer(this.state.id,this.state.user,this.state.email,this.state.token);
     } 
-    
+    t
 
     render(){
         return(
