@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, Col } from "reactstrap";
 import { Card, CardBody, CardFooter, CardHeader } from "reactstrap";
+import Link from "react-router-dom/Link";
 
 class NewMeeting extends Component {
   constructor(props) {
@@ -50,7 +51,7 @@ class NewMeeting extends Component {
             <FormGroup row>
               <Col md={{ size: 12 }}>
                 <Button type="submit" color="primary">
-                  Join Meeting
+                    <Link to={`/inmeeting/${this.state.link}`} style={{ color: 'white' }}>Join Meeting</Link>
                 </Button>
               </Col>
             </FormGroup>

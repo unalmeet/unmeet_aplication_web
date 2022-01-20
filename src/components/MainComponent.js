@@ -1,21 +1,23 @@
-import react, {Component} from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import Calendar from './CalendarPage/CalendarComponent';
-import Home from './HomePage/HomeComponent';
-import InMeeting from './InMeetingPage/InMeetingComponent';
+import { Component } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import Calendar from "./CalendarPage/CalendarComponent";
+import Home from "./HomePage/HomeComponent";
+import InMeeting from "./InMeetingPage/InMeetingComponent";
+import UserContext from "./UserContext";
+import Header from './Header/HeaderComponent';
 
 
 
 class Main extends Component {
-    constructor(props){
-        super(props);
-        this.state={
-          id:'',
-          user:'',
-          email:'',
-          token:''
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: "",
+      user: "",
+      email: "",
+      token: "",
+    };
+  }
     componentDidMount() {
       const user_meet = window.localStorage.getItem('user_meet');
       const user = JSON.parse(user_meet);
@@ -34,11 +36,23 @@ class Main extends Component {
       window.localStorage.setItem('user_meet',JSON.stringify(user_meet));
       return this.setState({id:id,user:user,email:email, token:token});
     }
-    
+    credentialLogout(message){
+      console.log(message.logout.message)
+      if(message.logout.message=="Logout seccessfull"){
+        console.log("if")
+        window.localStorage.removeItem('user_meet');
+        this.setState({
+          id:'',
+          user:'',
+          email:'',
+          token:''
+        })
 
-    
+      }
+    }
+  
     render(){
-
+      const Meet= ({match})=><InMeeting url={parseInt(match.params.url)}/>
       const isLogin = this.state.token!="" ? true:false;
       const home =(
         <Switch>
@@ -46,23 +60,23 @@ class Main extends Component {
           <Redirect to="/home"/>
         </Switch>);
       const protectedComponent =(
-        <Switch>
-          <Route  path={"/calendar/"+this.state.user} component={()=><Calendar user={this.state}/>}/>
-          <Route  path={"/inmeeting/"+this.state.user} component={()=><InMeeting user={this.state}/>}/>
-          <Redirect to={"/calendar/"+this.state.user}/>
-        </Switch> );
+        <UserContext.Provider value={this.state.id}>
+          <Switch>
+            <Route  path={"/calendar/"+this.state.user} component={()=><Calendar user={this.state}/>}/>
+            <Route  path="/inmeeting/:url" component={Meet}/>
+            <Redirect to={"/calendar/"+this.state.user}/>
+          </Switch>
+          </UserContext.Provider>
+         );
       
       const ProtectedRoute= isLogin==true ? home:protectedComponent;
         
-        
-
-        
-      console.log(ProtectedRoute)
       return (
         <div className="App row text-center">
-          <Switch>
+          <div className="col-12 col-md-12">
+            <Header token={this.state.token} answer={(message)=>this.credentialLogout(message)}/>
             {ProtectedRoute}
-          </Switch>
+          </div>
         </div>
       );
     }

@@ -48,8 +48,8 @@ class Home extends Component {
             <ModalBoton boton="Join Meeting" color="#144B7D" content={joinMeeting}/>
           </div>
           <div className="home_links_account">
-            <ModalLateral boton="Login" content={login} />
-            <ModalLateral boton="Register" content={register} />
+            <ModalLateral id="login" boton="Login" content={login} />
+            <ModalLateral boton="Register" content={register}/>
           </div>
         </div>
       </div>

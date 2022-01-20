@@ -176,6 +176,14 @@ const Controls = () => {
         },
         {
             id: 6,
+            name: 'record-screen',
+            action: (isActive) => handleRecordScreen(isActive),
+            isActive: false,
+            activeIcon: faRecordVinyl,
+            disabledIcon: faRecordVinyl
+        },
+        {
+            id: 7,
             name: 'end-call',
             action: (isActive) => alert('end-call control press' + isActive),
             isActive: false,
@@ -201,11 +209,6 @@ const Controls = () => {
     }
 
     return <Fragment>
-
-        
-
- 
-
         {
             controls.map((control, index) => (
                 <div onClick={() => handleControlClick(index)} className={`action-button ${control.isActive ? 'active' : 'disabled'}`}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Card,
   CardGroup,
@@ -6,11 +6,9 @@ import {
   CardTitle,
   CardSubtitle,
   CardText,
-  Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
 } from "reactstrap";
 
 import Meeting from "./Meeting";
@@ -41,7 +39,7 @@ class Days extends React.Component {
     });
   }
   render() {
-    //this.props.meetings.map((meeting) =>(console.log(meeting))
+    //this.props.meetings.map((meeting) =>(console.log(meeting)))
     var mydays = new Array(5);
     const today = new Date();
     const namesDays = [
