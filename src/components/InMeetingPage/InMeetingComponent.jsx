@@ -37,6 +37,8 @@ const UserBox = props => {
 
 const Controls = props => {
 
+    const [playing, setPlaying] = useState(false);
+    
     const {
         setIsCameraOpen
     } = props;
@@ -50,7 +52,6 @@ const Controls = props => {
 	stopButton = null,
 	downloadButton = null;
 
-    const [playing, setPlaying] = useState(false);
 
     async function setupStream () {
 
