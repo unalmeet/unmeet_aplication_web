@@ -37,7 +37,9 @@ class Main extends Component {
       return this.setState({id:id,user:user,email:email, token:token});
     }
     credentialLogout(message){
-      if(message.logout.message=='Logout successfull'){
+      console.log(message.logout.message)
+      if(message.logout.message=="Logout seccessfull"){
+        console.log("if")
         window.localStorage.removeItem('user_meet');
         this.setState({
           id:'',
