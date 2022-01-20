@@ -69,10 +69,8 @@ class Main extends Component {
           </UserContext.Provider>
          );
       
-      const ProtectedRoute= isLogin== false ? home:protectedComponent;
+      const ProtectedRoute= isLogin== true ? home:protectedComponent;
         
-        
-
       return (
         <div className="App row text-center">
           <div className="col-12 col-md-12">
