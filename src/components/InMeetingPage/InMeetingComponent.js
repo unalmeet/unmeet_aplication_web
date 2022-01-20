@@ -12,7 +12,9 @@ import {
     faDesktop, 
     faPhoneSlash,
     faLaugh,
-    faPaperPlane
+    faPaperPlane,
+    faRecordVinyl,
+    faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -34,6 +36,102 @@ const UserBox = props => {
 }
 
 const Controls = () => {
+
+    let active = false
+    let mimeType;
+
+    let stream = null,
+	audio = null,
+	mixedStream = null,
+	chunks = [], 
+	recorder = null,
+	startButton = null,
+	stopButton = null,
+	downloadButton = null;
+
+
+    async function setupStream () {
+
+        try {
+            stream = await navigator.mediaDevices.getDisplayMedia({
+                video: true
+            });
+    
+            audio = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100,
+                },
+            });
+
+        } catch (err) {
+            console.error(err)  
+        }
+    }
+    
+    function setupVideoFeedback() {
+        if (stream) {
+            const video = document.querySelector('.video-feedback');
+            video.srcObject = stream;  
+            video.play();
+        } else {
+            console.warn('No stream available');
+        }
+    }
+    
+    async function startRecording () {
+        await setupStream();
+    
+        if (stream && audio) {
+            mixedStream = new MediaStream([...stream.getTracks(), ...audio.getTracks()]);
+            recorder = new MediaRecorder(mixedStream);
+            recorder.ondataavailable = handleDataAvailable;
+            recorder.onstop = handleStop;
+            recorder.start(1000);
+        
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        
+            console.log('Recording started');
+        } else {
+            console.warn('No stream available.');
+        }
+    }
+    
+    function stopRecording () {
+        recorder.stop();
+    
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+    
+    function handleDataAvailable (e) {
+        chunks.push(e.data);
+    }
+    
+    function handleStop (e) {
+        const blob = new Blob(chunks, { 'type' : 'video/mp4' });
+        chunks = [];
+    
+        downloadButton.href = URL.createObjectURL(blob);
+        downloadButton.download = 'video.mp4';
+        downloadButton.disabled = false;
+    
+        stream.getTracks().forEach((track) => track.stop());
+        audio.getTracks().forEach((track) => track.stop());
+    
+        console.log('Recording stopped');
+    }
+    
+    window.addEventListener('load', () => {
+        startButton = document.querySelector('.start-recording');
+        stopButton = document.querySelector('.stop-recording');
+        downloadButton = document.querySelector('.download-video');
+    
+        startButton.addEventListener('click', startRecording);
+        stopButton.addEventListener('click', stopRecording);
+    })
 
     const [ controls, setControls ] = useState([
         {
@@ -83,6 +181,15 @@ const Controls = () => {
             isActive: false,
             activeIcon: faPhoneSlash,
             disabledIcon: faPhoneSlash
+        },
+        {
+            id: 7,
+            name: 'more-options',
+            action: (isActive) => alert('end-call control press' + isActive),
+            isActive: false,
+            activeIcon: faEllipsisH,
+            disabledIcon: faEllipsisH
+
         }
     ])
 
@@ -94,6 +201,11 @@ const Controls = () => {
     }
 
     return <Fragment>
+
+        
+
+ 
+
         {
             controls.map((control, index) => (
                 <div onClick={() => handleControlClick(index)} className={`action-button ${control.isActive ? 'active' : 'disabled'}`}>
@@ -109,6 +221,21 @@ const Controls = () => {
 
 const ChatInput = () => {
     return <div className='chat-input'>
+        <a class="download-video">
+            <button type="button">
+                Download
+            </button>
+        </a>
+        <a class="start-recording">
+            <button type="button">
+                Start
+            </button>
+        </a>
+        <a class="stop-recording">
+            <button type="button">
+                Stop
+            </button>
+        </a>
         <FontAwesomeIcon icon={faLaugh} className='chat-input-emoji-icon' />
         <textarea name="textarea" rows="2" className='chat-input-text' />
         <FontAwesomeIcon icon={faPaperPlane}  className='chat-input-send-icon' />

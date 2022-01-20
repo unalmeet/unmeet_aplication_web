@@ -100,3 +100,12 @@
     flex-direction: column;
     justify-content: flex-end;
 }
+.camera
+{   position: absolute;
+    width: 256px !important;
+    height: 400px !important;
+    background-size: cover;
+    z-index: 1;
+    object-fit: scale-down;
+
+}

@@ -52,7 +52,7 @@ class Main extends Component {
           <Redirect to={"/calendar/"+this.state.user}/>
         </Switch> );
       
-      const ProtectedRoute= isLogin==false ? home:protectedComponent;
+      const ProtectedRoute= isLogin==true ? home:protectedComponent;
         
         
 
