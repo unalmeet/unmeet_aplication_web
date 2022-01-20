@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Card,
   CardGroup,
@@ -19,11 +19,16 @@ import { faMicrophone, faVideo } from "@fortawesome/free-solid-svg-icons";
 
 class Calendar extends React.Component {
   static contextType = UserContext;
-  state = {
-    meetings: [],
-    microphoneFlag: false,
-    videoFlag: false,
-  };
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef(null);
+    this.state = {
+      meetings: [],
+      microphoneFlag: false,
+      videoFlag: false,
+    };
+  }
+  
 
   arrayUnique(array) {
     var a = array.concat();
@@ -35,14 +40,14 @@ class Calendar extends React.Component {
 
     return a;
   }
-  handleControlClick(selection) { 
+  handleControlClick(selection) {
     let _state = selection;
     this.setState({ [_state]: !this.state[_state] });
   }
 
   componentDidMount() {
     const user = this.context;
-    console.log(user)
+    console.log(user);
     fetch("http://34.122.205.216:8080/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -84,33 +89,54 @@ class Calendar extends React.Component {
         this.setState({ meetings: uniqueMeetings });
       });
   }
+
   render() {
     const newMeeting = <NewMeeting className="bg-primary" />;
     const joinMeeting = <JoinMeeting className="bg-primary" />;
+
+
+    const getVideo = () => {
+      this.handleControlClick("videoFlag");
+      navigator.mediaDevices
+        .getUserMedia({ video: { width: "100%" } })
+        .then((stream) => {
+          let video = this.myRef.current;
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch((err) => {
+          console.error("error:", err);
+        });
+    };
+
     return (
       <div>
         <Days meetings={this.state.meetings} />
         <div className="calendar_meeting_display">
           <div className="calendar_meeting_videodisplay">
-            <Card
-              style={{
-                margin: "1rem",
-                backgroundColor: "#2D2A2A",
-              }}
-            >
-              <CardBody
+            {this.state.videoFlag ? (
+              <video height="100%" width="100%" muted autoPlay ref={this.myRef} />
+            ) : (
+              <Card
                 style={{
-                  display: "grid",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  margin: "1rem",
+                  backgroundColor: "#2D2A2A",
                 }}
               >
-                <Logo
-                  width={window.innerWidth * 0.2}
-                  height={window.innerWidth * 0.2}
-                />
-              </CardBody>
-            </Card>
+                <CardBody
+                  style={{
+                    display: "grid",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Logo
+                    width={window.innerWidth * 0.2}
+                    height={window.innerWidth * 0.2}
+                  />
+                </CardBody>
+              </Card>
+            )}
           </div>
 
           <div className="calendar_meeting_buttons">
@@ -126,7 +152,7 @@ class Calendar extends React.Component {
             />
             <div className="calendar_cammic_buttons">
               <div
-                onClick={() => this.handleControlClick("microphoneFlag")}
+                onClick={() => this.handleControlClick("videoFlag")}
                 className={`action-button ${
                   this.state.microphoneFlag ? "active" : "disabled"
                 }`}
@@ -139,7 +165,7 @@ class Calendar extends React.Component {
                 />
               </div>
               <div
-                onClick={() => this.handleControlClick("videoFlag")}
+                onClick={() => getVideo()}
                 className={`action-button ${
                   this.state.videoFlag ? "active" : "disabled"
                 }`}
