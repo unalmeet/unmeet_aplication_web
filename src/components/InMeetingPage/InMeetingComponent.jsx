@@ -17,33 +17,7 @@ import {
     faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-const UserBox = props => {
-
-    const { user } = props;
-
-    return <Col xs={12} md={3} className='user-box'>
-        {
-            user.avatar ? 
-            <img src={user.avatar} alt='user-box'/>
-            :
-            <div className='user-initials'>
-                {user.name[0]}
-            </div>
-        }
-        
-    </Col>
-}
-
-const Controls = props => {
-
-    const [playing, setPlaying] = useState(false);
-    
-    const {
-        setIsCameraOpen
-    } = props;
-
-    let stream = null,
+let stream = null,
 	audio = null,
 	mixedStream = null,
 	chunks = [], 
@@ -72,29 +46,19 @@ const Controls = props => {
             console.error(err)  
         }
     }
-    
-    function setupVideoFeedback() {
-        if (stream) {
-            const video = document.querySelector('.video-feedback');
-            video.srcObject = stream;  
-            video.play();
-        } else {
-            console.warn('No stream available');
-        }
-    }
-    
+
     async function startRecording () {
         await setupStream();
     
         if (stream && audio) {
+
+        
             mixedStream = new MediaStream([...stream.getTracks(), ...audio.getTracks()]);
             recorder = new MediaRecorder(mixedStream);
             recorder.ondataavailable = handleDataAvailable;
             recorder.onstop = handleStop;
             recorder.start(1000);
-        
-            startButton.disabled = true;
-            stopButton.disabled = false;
+  
         
             console.log('Recording started');
         } else {
@@ -105,8 +69,7 @@ const Controls = props => {
     function stopRecording () {
         recorder.stop();
     
-        startButton.disabled = false;
-        stopButton.disabled = true;
+
     }
     
     function handleDataAvailable (e) {
@@ -135,6 +98,33 @@ const Controls = props => {
         startButton.addEventListener('click', startRecording);
         stopButton.addEventListener('click', stopRecording);
     })
+
+const UserBox = props => {
+
+    const { user } = props;
+
+    return <Col xs={12} md={3} className='user-box'>
+        {
+            user.avatar ? 
+            <img src={user.avatar} alt='user-box'/>
+            :
+            <div className='user-initials'>
+                {user.name[0]}
+            </div>
+        }
+        
+    </Col>
+}
+
+const Controls = props => {
+
+    const [playing, setPlaying] = useState(false);
+    
+    const {
+        setIsCameraOpen
+    } = props;
+
+    
 
     const startCamera = () => {
         setIsCameraOpen(true)
@@ -203,21 +193,32 @@ const Controls = props => {
         },
         {
             id: 6,
-            name: 'end-call',
-            action: (isActive) => alert('end-call control press' + isActive),
+            name: 'record-session',
+            action: (isActive) => isActive ? startRecording() : stopRecording(),
             isActive: false,
-            activeIcon: faPhoneSlash,
-            disabledIcon: faPhoneSlash
+            activeIcon: faRecordVinyl,
+            disabledIcon: faRecordVinyl
+
         },
         {
             id: 7,
             name: 'more-options',
-            action: (isActive) => alert('end-call control press' + isActive),
+            action: (isActive) => alert('More Options' + isActive),
             isActive: false,
             activeIcon: faEllipsisH,
             disabledIcon: faEllipsisH
 
+        },
+        {
+            id: 8,
+            name: 'end-call',
+            action: (isActive) => alert('Call ended' + isActive),
+            isActive: false,
+            activeIcon: faPhoneSlash,
+            disabledIcon: faPhoneSlash
         }
+        
+        
     ])
 
     const handleControlClick = index => {
@@ -228,8 +229,9 @@ const Controls = props => {
     }
 
     return <Fragment>
-        {
+        {   
             controls.map((control, index) => (
+                
                 <div onClick={() => handleControlClick(index)} className={`action-button ${control.isActive ? 'active' : 'disabled'}`}>
                     <FontAwesomeIcon 
                         icon={control.isActive ? control.activeIcon : control.disabledIcon } 
@@ -243,21 +245,8 @@ const Controls = props => {
 
 const ChatInput = () => {
     return <div className='chat-input'>
-        <a class="download-video">
-            <button type="button">
-                Download
-            </button>
-        </a>
-        <a class="start-recording">
-            <button type="button">
-                Start
-            </button>
-        </a>
-        <a class="stop-recording">
-            <button type="button">
-                Stop
-            </button>
-        </a>
+        
+        
         <FontAwesomeIcon icon={faLaugh} className='chat-input-emoji-icon' />
         <textarea name="textarea" rows="2" className='chat-input-text' />
         <FontAwesomeIcon icon={faPaperPlane}  className='chat-input-send-icon' />
@@ -289,7 +278,7 @@ const ChatMessages = () => {
     ]
 
     return <div className='chat-messages-container'>
-        {
+        {   
             messages.map((m, i) => (
                 <div key={i} className='chat-message-box'><strong>{m.from}: </strong>{m.message}</div>
             ))
@@ -345,12 +334,14 @@ const InMeeting = props => {
     ]
 
     return <Row className='full-height'>
+        
             <Col xs={12} md={2} className='chat-container'>
                 <ChatMessages />
                 <ChatInput/>
             </Col>
             <Col xs={12} md={10} className='right-panel'>
                 <Row xs={12} className='user-grid'>
+                    
                     <Col xs={12} md={3} className='user-box' id='my__camera_container'>
                         {
                             isCameraOpen ? <video
@@ -365,16 +356,24 @@ const InMeeting = props => {
                                 me
                             </div>
                         }
+                        
                     </Col>
                     {
                         users.map((user) => (
                             <UserBox user={user}/>
                         ))
                     }
+                    
                 </Row>
+                <a class="download-video">
+            <button type="button">
+                Download
+            </button>
+        </a>
                 <Row xs={12} className='controls-grid '>
                     <Controls setIsCameraOpen={setIsCameraOpen}/>
                 </Row>
+                
             </Col>
         </Row>
     
