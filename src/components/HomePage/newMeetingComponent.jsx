@@ -170,7 +170,7 @@ class NewMeeting extends Component {
             <FormGroup row>
               <Col md={{ size: 12 }}>
                 <Button
-                  type="button"
+                  type="submit"
                   color="primary"
                   onClick={this.handleSubmit}
                 >

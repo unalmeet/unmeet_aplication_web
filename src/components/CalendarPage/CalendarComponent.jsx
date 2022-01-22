@@ -23,71 +23,14 @@ class Calendar extends React.Component {
     super(props);
     this.myRef = React.createRef(null);
     this.state = {
-      meetings: [],
       microphoneFlag: false,
       videoFlag: false,
     };
   }
-  
 
-  arrayUnique(array) {
-    var a = array.concat();
-    for (var i = 0; i < a.length; ++i) {
-      for (var j = i + 1; j < a.length; ++j) {
-        if (a[i].link === a[j].link) a.splice(j--, 1);
-      }
-    }
-
-    return a;
-  }
   handleControlClick(selection) {
     let _state = selection;
     this.setState({ [_state]: !this.state[_state] });
-  }
-
-  componentDidMount() {
-    const user = this.context;
-    console.log(user);
-    fetch("http://34.122.205.216:8080/graphql", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query:
-          `query {
-          listMeetingsAttendant(attendant:` +
-          user +
-          `){
-            link
-            name
-            description
-            attendants
-            date_start
-            date_end
-            host
-          }
-          listMeetingsHosted(host:` +
-          user +
-          `){
-            link
-            name
-            description
-            attendants
-            date_start
-            date_end
-            host
-          }
-        }    
-      `,
-      }),
-    })
-      .then((response) => response.json())
-      .then((query) => {
-        let meetings = query.data.listMeetingsAttendant.concat(
-          query.data.listMeetingsHosted
-        );
-        var uniqueMeetings = this.arrayUnique(meetings);
-        this.setState({ meetings: uniqueMeetings });
-      });
   }
 
   render() {
@@ -111,7 +54,7 @@ class Calendar extends React.Component {
 
     return (
       <div>
-        <Days meetings={this.state.meetings} />
+        <Days />
         <div className="calendar_meeting_display">
           <div className="calendar_meeting_videodisplay">
             {this.state.videoFlag ? (

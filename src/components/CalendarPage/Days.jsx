@@ -12,18 +12,73 @@ import {
 } from "reactstrap";
 
 import Meeting from "./Meeting";
-
+import UserContext from "../UserContext";
 import Day from "./Day";
 
 class Days extends React.Component {
-  constructor(props) {
-    super(props);
+  static contextType = UserContext;
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       modal: false,
       daySelected: "",
+      meetings: [],
     };
 
     this.toggle = this.toggle.bind(this);
+  }
+  arrayUnique(array) {
+    var a = array.concat();
+    for (var i = 0; i < a.length; ++i) {
+      for (var j = i + 1; j < a.length; ++j) {
+        if (a[i].link === a[j].link) a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  }
+  componentDidMount() {
+    const userinfo = JSON.parse(localStorage.getItem('user_meet'))
+    fetch("http://34.122.205.216:8080/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query:
+          `query {
+          listMeetingsAttendant(attendant:` +
+          userinfo.id +
+          `){
+            link
+            name
+            description
+            attendants
+            date_start
+            date_end
+            host
+          }
+          listMeetingsHosted(host:` +
+          userinfo.id +
+          `){
+            link
+            name
+            description
+            attendants
+            date_start
+            date_end
+            host
+          }
+        }    
+      `,
+      }),
+    })
+      .then((response) => response.json())
+      .then((query) => {
+        let meetings = query.data.listMeetingsAttendant.concat(
+          query.data.listMeetingsHosted
+        );
+        var uniqueMeetings = this.arrayUnique(meetings);
+        this.setState({ meetings: uniqueMeetings });
+      });
   }
 
   toggle() {
@@ -59,9 +114,9 @@ class Days extends React.Component {
         day: namesDays[tomorrow.getDay()],
         meetings: [],
       };
-      for (let meeting in this.props.meetings) {
+      for (let meeting in this.state.meetings) {
         const meetingtimestamp = Date.parse(
-          this.props.meetings[meeting].date_start
+          this.state.meetings[meeting].date_start
         );
         const meetingdatetime = new Date(meetingtimestamp);
         const date = meetingdatetime.getUTCDate();
@@ -72,7 +127,7 @@ class Days extends React.Component {
           tomorrow.getMonth() === month &&
           tomorrow.getFullYear() === year
         ) {
-          mydays[i].meetings.push(this.props.meetings[meeting]);
+          mydays[i].meetings.push(this.state.meetings[meeting]);
         }
       }
     }

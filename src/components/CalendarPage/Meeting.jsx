@@ -19,6 +19,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Meeting extends React.Component {
   static contextType = UserContext;
+  constructor(props, context) {
+    super(props);
+    this.state = {
+      user: context,
+      mymeetings: [],
+    };
+  }
+
+  componentDidMount() {
+    let result = [];
+    let meetings = this.props.meetings.sort(
+      (a, b) => Date.parse(a.date_start) - Date.parse(b.date_start)
+    );
+    for (let i in meetings) {
+      let x = {
+        link: "",
+        name: "",
+        description: "",
+        date_start: "",
+        date_end: "",
+        host: "",
+        attendants: "",
+      };
+      let start = new Date(Date.parse(meetings[i].date_start));
+      let end = new Date(Date.parse(meetings[i].date_end));
+      x.link = meetings[i].link;
+      x.name = meetings[i].name;
+      x.description = meetings[i].description;
+      x.date_start = start.toLocaleTimeString("en-US", { timeZone: "UTC" });
+      x.date_end = end.toLocaleTimeString("en-US", { timeZone: "UTC" });
+      x.host = meetings[i].host;
+      x.attendants = meetings[i].attendants.toString();
+      result.push(x);
+    }
+    this.setState({ mymeetings: result });
+  }
 
   inviteUser(link) {
     fetch("http://34.122.205.216:8080/graphql", {
@@ -42,17 +78,26 @@ class Meeting extends React.Component {
       });
   }
 
-  removeMeeting(link) {
+  removeMeeting(cancelledmeeting) {
+    let temp_array = this.state.mymeetings;
+    const index = temp_array.indexOf(cancelledmeeting);
+    if (index > -1) {
+      temp_array.splice(index, 1);
+    }
+    this.setState({
+      mymeetings: temp_array,
+    });
+
     fetch("http://34.122.205.216:8080/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query:
           `mutation {
-          removeMeeting(link:"` +
-          link +
+             removeMeeting(link:"` +
+              cancelledmeeting.link +
           `")
-        }`,
+           }`,
       }),
     })
       .then((response) => response.json())
@@ -62,32 +107,6 @@ class Meeting extends React.Component {
   }
 
   render() {
-    const user = this.context;
-    let meetings = this.props.meetings.sort(
-      (a, b) => Date.parse(a.date_start) - Date.parse(b.date_start)
-    );
-    let mymeetings = [];
-    for (let i in meetings) {
-      let x = {
-        link: "",
-        name: "",
-        description: "",
-        date_start: "",
-        date_end: "",
-        host: "",
-        attendants: "",
-      };
-      let start = new Date(Date.parse(meetings[i].date_start));
-      let end = new Date(Date.parse(meetings[i].date_end));
-      x.link = meetings[i].link;
-      x.name = meetings[i].name;
-      x.description = meetings[i].description;
-      x.date_start = start.toLocaleTimeString("en-US", { timeZone: "UTC" });
-      x.date_end = end.toLocaleTimeString("en-US", { timeZone: "UTC" });
-      x.host = meetings[i].host;
-      x.attendants = meetings[i].attendants.toString();
-      mymeetings.push(x);
-    }
     const newMeeting = <NewMeeting className="bg-primary" />;
     let renderNoMeetings = (
       <Card
@@ -111,12 +130,13 @@ class Meeting extends React.Component {
         </CardBody>
       </Card>
     );
-    let rendermeetings = mymeetings.map((meeting) => (
+    let rendermeetings = this.state.mymeetings.map((meeting) => (
       <Card
         key={meeting.link}
         inverse
         style={{
-          backgroundColor: meeting.host == user ? "#144B7D" : "#029ACA",
+          backgroundColor:
+            meeting.host == this.state.user ? "#144B7D" : "#029ACA",
           margin: "1rem",
           borderRadius: "1rem",
         }}
@@ -131,17 +151,19 @@ class Meeting extends React.Component {
             {meeting.date_start} - {meeting.date_end}
           </CardSubtitle>
           <CardText>
-            <div>Description: {meeting.description}</div>
-            <div>Attendants: {meeting.attendants}</div>
+            <span>Description: {meeting.description}</span>
           </CardText>
-          <div>
+          <CardText>
+            <span>Attendants: {meeting.attendants}</span>
+          </CardText>
+          <span>
             <CardFooter>Hosted by: {meeting.host}</CardFooter>
-          </div>
-          {meeting.host == user && (
-            <div>
+          </span>
+          {meeting.host == this.state.user && (
+            <span>
               <Button
                 style={{ backgroundColor: "white" }}
-                onClick={() => this.removeMeeting(meeting.link)}
+                onClick={() => this.removeMeeting(meeting)}
               >
                 <FontAwesomeIcon icon={faTrashAlt} color="#029ACA" />
               </Button>
@@ -151,13 +173,16 @@ class Meeting extends React.Component {
               >
                 <FontAwesomeIcon icon={faUserPlus} color="#029ACA" />
               </Button>
-            </div>
+            </span>
           )}
         </CardBody>
       </Card>
     ));
+    console.log(this.state);
     return (
-      <div>{mymeetings.length === 0 ? renderNoMeetings : rendermeetings}</div>
+      <div>
+        {this.state.mymeetings.length === 0 ? renderNoMeetings : rendermeetings}
+      </div>
     );
   }
 }
