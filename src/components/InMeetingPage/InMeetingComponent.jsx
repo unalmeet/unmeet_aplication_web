@@ -276,8 +276,7 @@ const ChatMessages = () => {
 
 const InMeeting = props => {
 
-    console.log(props)    
-
+    const { url: meetingId } = props;
     const [ cameraSize, setCameraSize ] = useState({ width: 0, height: 0 })
     const [ isCameraOpen, setIsCameraOpen ] = useState(false)
 
@@ -286,17 +285,13 @@ const InMeeting = props => {
     useEffect(() => {
 
         //TODO: get userId and meetingId dynamically 
-        let userinfo = JSON.parse(localStorage.getItem('user_meet'))
-        //userinfo.id
-        const meetingId = "holamundo";
-        const userId = 123;
+        const userinfo = JSON.parse(localStorage.getItem('user_meet'))
 
-        
         const ADD_NEW_TRANSMISSION_MUTATION=`mutation
         {
             addNewTransmission(meetingData:{
                 idMeeting: "${meetingId}",
-                idUser: ${userId}
+                idUser: ${userinfo.id}
             })
             { token }
         }`
@@ -319,7 +314,7 @@ const InMeeting = props => {
                 autoConnect: false,
                 auth: {
                     token: transmissionToken,
-                    usr: userId
+                    usr: userinfo.id
                 }
             });
     
