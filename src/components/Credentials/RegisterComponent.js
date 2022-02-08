@@ -42,7 +42,6 @@ class Register extends Component {
             {id,email,name,token}
         }`
 
-
         fetch(process.env.REACT_APP_API, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -71,7 +70,6 @@ class Register extends Component {
             {id}
         }`
 
-
         fetch(process.env.REACT_APP_API, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -95,12 +93,13 @@ class Register extends Component {
             <
             CardHeader className = "bg-primary" >
             <
-            h4 className = "text-title text-white" > Register < /h4> <
-            /CardHeader> <
+            h4 className = "text-title text-white" > Register < /h4> < /
+            CardHeader > <
             CardBody >
             <
             Form onSubmit = {
-                (event) => { this.sendForm(event) } } >
+                (event) => { this.sendForm(event) }
+            } >
             <
             FormGroup row >
             <
@@ -114,8 +113,8 @@ class Register extends Component {
             placeholder = "User Name"
             value = { this.state.user }
             onChange = { this.handleInputChange }
-            />  <
-            /Col> <
+            />  < /
+            Col > <
             /FormGroup> <
             FormGroup row >
             <
@@ -129,8 +128,8 @@ class Register extends Component {
             placeholder = "Email"
             value = { this.state.email }
             onChange = { this.handleInputChange }
-            />  <
-            /Col> <
+            />  < /
+            Col > <
             /FormGroup> <
             FormGroup row >
             <
@@ -144,8 +143,8 @@ class Register extends Component {
             placeholder = "Password"
             value = { this.state.password }
             onChange = { this.handleInputChange }
-            />  <
-            /Col> <
+            />  < /
+            Col > <
             /FormGroup> <
             FormGroup row >
             <
@@ -159,23 +158,24 @@ class Register extends Component {
             placeholder = "Password"
             value = { this.state.password_confirmation }
             onChange = { this.handleInputChange }
-            />  <
-            /Col> <
+            />  < /
+            Col > <
             /FormGroup>
 
             <
             FormGroup row >
             <
             Col md = {
-                { size: 12 } } >
+                { size: 12 }
+            } >
             <
             Button type = "submit"
-            color = "primary" > Register < /Button> <
-            /Col> <
-            /FormGroup> <
-            /Form> <
-            /CardBody> <
-            /div>
+            color = "primary" > Register < /Button> < /
+            Col > <
+            /FormGroup> < /
+            Form > <
+            /CardBody> < /
+            div >
 
         );
     }

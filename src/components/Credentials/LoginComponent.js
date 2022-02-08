@@ -68,12 +68,13 @@ class Login extends Component {
             <
             CardHeader className = "bg-primary" >
             <
-            h4 className = "text-title text-white" > Login < /h4> <
-            /CardHeader> <
+            h4 className = "text-title text-white" > Login < /h4> < /
+            CardHeader > <
             CardBody >
             <
             Form onSubmit = {
-                (event) => { this.sendForm(event) } } >
+                (event) => { this.sendForm(event) }
+            } >
             <
             FormGroup row >
             <
@@ -87,8 +88,8 @@ class Login extends Component {
             placeholder = "Email"
             value = { this.state.email }
             onChange = { this.handleInputChange }
-            />  <
-            /Col> <
+            />  < /
+            Col > <
             /FormGroup> <
             FormGroup row >
             <
@@ -102,21 +103,22 @@ class Login extends Component {
             placeholder = "Password"
             value = { this.state.password }
             onChange = { this.handleInputChange }
-            />  <
-            /Col> <
+            />  < /
+            Col > <
             /FormGroup>
 
             <
             FormGroup row >
             <
             Col md = {
-                { size: 12 } } >
+                { size: 12 }
+            } >
             <
             Button type = "submit"
-            color = "primary" > Login < /Button> <
-            /Col> <
-            /FormGroup> <
-            /Form> <
+            color = "primary" > Login < /Button> < /
+            Col > <
+            /FormGroup> < /
+            Form > <
             /CardBody>
 
             <

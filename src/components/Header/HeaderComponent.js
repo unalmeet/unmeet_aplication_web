@@ -50,14 +50,15 @@ export default class Header extends Component {
             <
             a className = "col-5 col-md-2 btn"
             onClick = {
-                (event) => this.logout(event) } >
+                (event) => this.logout(event)
+            } >
             <
             div href = "#"
             className = " text-white" >
-            Logout < i className = " text-white fa fa-user" > < /i> <
-            /div> <
-            /a> <
-            /div>
+            Logout < i className = " text-white fa fa-user" > < /i> < /
+            div > <
+            /a> < /
+            div >
         );
         const contentHeaderLog = ( <
             div className = "row d-flex justify-content-between" >
@@ -75,8 +76,8 @@ export default class Header extends Component {
             div className = "row text-white" >
             <
             div className = "col-12 col-md-12  " > { contentHeader } <
-            /div> <
-            /div> <
+            /div> < /
+            div > <
             /div>  
         );
     }

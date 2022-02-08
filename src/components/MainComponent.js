@@ -52,8 +52,9 @@ class Main extends Component {
     }
   
     render(){
-      const Meet= ({match})=><InMeeting url={parseInt(match.params.url)}/>
-      const isLogin = this.state.token!="" ? true:false;
+      const Meet= ({match})=><InMeeting url={match.params.url}/>
+      //const isLogin = this.state.token!="" ? true:false;
+      const isLogin = true;
       const home =(
         <Switch>
           <Route path="/home" component={()=><Home credentials={(id, user, email, token)=>this.credentialLogin(id, user, email, token)}/>} />

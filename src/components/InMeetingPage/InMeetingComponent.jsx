@@ -17,6 +17,8 @@ import {
     faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { io } from "socket.io-client";
+
 let stream = null,
 	audio = null,
 	mixedStream = null,
@@ -95,8 +97,8 @@ let stream = null,
         stopButton = document.querySelector('.stop-recording');
         downloadButton = document.querySelector('.download-video');
     
-        startButton.addEventListener('click', startRecording);
-        stopButton.addEventListener('click', stopRecording);
+        // startButton.addEventListener('click', startRecording);
+        // stopButton.addEventListener('click', stopRecording);
     })
 
 const UserBox = props => {
@@ -117,37 +119,23 @@ const UserBox = props => {
 }
 
 const Controls = props => {
-
-    const [playing, setPlaying] = useState(false);
     
     const {
-        setIsCameraOpen
+        setIsCameraOpen,
+        openSocketConnection,
+        closeSocketConnection,
+        emitVideo
     } = props;
 
-    
-
     const startCamera = () => {
+        openSocketConnection();
+        emitVideo();
         setIsCameraOpen(true)
-        setPlaying(true);
-		navigator.getUserMedia(
-			{
-				video: true,
-			},
-			(stream) => {
-				let video = document.getElementById('my__camera');
-				if (video) {
-					video.srcObject = stream;
-				}
-			},
-			(err) => console.error(err)
-		);
     }
 
     const stopCamera = () => {
+        closeSocketConnection()
         setIsCameraOpen(false)
-		setPlaying(false);
-		let video = document.getElementById('my__camera');
-		video.srcObject.getTracks()[0].stop();
 	};
 
     const [ controls, setControls ] = useState([
@@ -288,8 +276,74 @@ const ChatMessages = () => {
 
 const InMeeting = props => {
 
+    const { url: meetingId } = props;
     const [ cameraSize, setCameraSize ] = useState({ width: 0, height: 0 })
     const [ isCameraOpen, setIsCameraOpen ] = useState(false)
+
+    let socket, transmissionToken;
+
+    useEffect(() => {
+
+        //TODO: get userId and meetingId dynamically 
+        const userinfo = JSON.parse(localStorage.getItem('user_meet'))
+
+        const ADD_NEW_TRANSMISSION_MUTATION=`mutation
+        {
+            addNewTransmission(meetingData:{
+                idMeeting: "${meetingId}",
+                idUser: ${userinfo.id}
+            })
+            { token }
+        }`
+
+        fetch(process.env.REACT_APP_API,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({query:ADD_NEW_TRANSMISSION_MUTATION})  
+        }).then((response) => {
+            if (response.status >= 400) {
+                console.log(response);
+                throw new Error("Error fetching data");
+            } else {
+                return response.json();
+            }
+        }).then((data) =>{
+            transmissionToken = data.data.addNewTransmission.token
+
+            socket = io(process.env.REACT_APP_SOCKET_URL,{
+                autoConnect: false,
+                auth: {
+                    token: transmissionToken,
+                    usr: userinfo.id
+                }
+            });
+    
+            console.log(socket)
+        
+            socket.on('connect', function() {
+                console.log('Connected');
+            });
+                
+            socket.on('video', function(data) {
+                var img = document.getElementById('play');
+                img.src = data;;
+            });
+        
+            socket.on('disconnect', function() {
+                console.log('Disconnected');
+            });
+
+        });
+
+    }, [])
+
+    const openSocketConnection = () => {
+        socket.connect()
+    }
+
+    const closeSocketConnection = () => {
+        socket.disconnect()
+    }
 
     const handleResize = () => {
         const element = document.getElementById('my__camera_container');
@@ -302,8 +356,37 @@ const InMeeting = props => {
         const positionInfo = element.getBoundingClientRect();
         setCameraSize({ width: positionInfo.width, height: positionInfo.height })
         window.addEventListener("resize", handleResize, false);
-        
     }, [])
+
+    async function captura(){
+		let mediaStream = await navigator.mediaDevices.getUserMedia({video: true});
+		return mediaStream;
+  	};
+	  
+    const emitVideo = () => {
+
+        const canvasHtml = document.querySelector('#canvas');
+        const imageHtml = document.querySelector('#image');
+        const context = canvasHtml.getContext("2d");
+
+        context.height = cameraSize.height;
+        context.width = cameraSize.width;
+
+
+        captura().then(stream => {
+            imageHtml.srcObject = stream;
+        });
+        
+        setInterval(()=>{
+            const imageObj = document.getElementById('play');
+            imageObj.onload = function(e) {
+                context.canvas.width = imageObj.width;
+                context.canvas.height = imageObj.height;
+                context.drawImage(imageHtml, 0, 0,imageObj.width,imageObj.height);
+            };
+            socket.emit('video', canvasHtml.toDataURL('image/webp'));
+        }, 100);
+    };
 
     const users = [
         {
@@ -332,7 +415,7 @@ const InMeeting = props => {
             avatar: avatarImg
         }
     ]
-
+    
     return <Row className='full-height'>
         
             <Col xs={12} md={2} className='chat-container'>
@@ -343,19 +426,14 @@ const InMeeting = props => {
                 <Row xs={12} className='user-grid'>
                     
                     <Col xs={12} md={3} className='user-box' id='my__camera_container'>
-                        {
-                            isCameraOpen ? <video
-                                height={cameraSize.height}
-                                width={cameraSize.width}
-                                muted
-                                autoPlay
-                                id="my__camera"
-                            />
-                            :
-                            <div className='user-initials'>
-                                me
-                            </div>
-                        }
+
+                    <div className={!isCameraOpen && 'hidden'}>
+                        <video id="image" className='my__camera_video' height={cameraSize.height} width={cameraSize.width} autoPlay/>
+                        <canvas id="canvas" className='my__camera_canvas' height={cameraSize.height} width={cameraSize.width} />
+                        <img id="play" alt=""/>
+                    </div>
+
+                    <div className={`user-initials ${isCameraOpen && 'hidden'}`}>me</div>
                         
                     </Col>
                     {
@@ -365,13 +443,13 @@ const InMeeting = props => {
                     }
                     
                 </Row>
-                <a class="download-video">
-            <button type="button">
-                Download
-            </button>
-        </a>
+                <a className="download-video">
+                    <button type="button">
+                        Download
+                    </button>
+                </a>
                 <Row xs={12} className='controls-grid '>
-                    <Controls setIsCameraOpen={setIsCameraOpen}/>
+                    <Controls setIsCameraOpen={setIsCameraOpen} openSocketConnection={openSocketConnection} closeSocketConnection={closeSocketConnection} emitVideo={emitVideo}/>
                 </Row>
                 
             </Col>
