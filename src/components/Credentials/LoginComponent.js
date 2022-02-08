@@ -34,7 +34,7 @@ class Login extends Component {
             {id,email,name,token}
         }`
 
-        fetch('http://34.122.205.216:8080/graphql',{
+        fetch(process.env.REACT_APP_API,{
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body: JSON.stringify({query:FILMS_QUERY})  

@@ -109,3 +109,9 @@
     object-fit: scale-down;
 
 }
+
+.my__camera_video,
+.my__camera_canvas,
+.hidden {
+    display: none;
+}

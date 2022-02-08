@@ -40,7 +40,7 @@ class NewMeeting extends Component {
   }
   handleSubmit(event) {
     console.log(this.state)
-    fetch("http://34.122.205.216:8080/graphql", {
+    fetch(process.env.REACT_APP_API, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Credentials": true },
       body: JSON.stringify({

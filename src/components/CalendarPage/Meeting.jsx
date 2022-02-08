@@ -57,7 +57,7 @@ class Meeting extends React.Component {
   }
 
   inviteUser(link) {
-    fetch("http://34.122.205.216:8080/graphql", {
+    fetch(process.env.REACT_APP_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -88,7 +88,7 @@ class Meeting extends React.Component {
       mymeetings: temp_array,
     });
 
-    fetch("http://34.122.205.216:8080/graphql", {
+    fetch(process.env.REACT_APP_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

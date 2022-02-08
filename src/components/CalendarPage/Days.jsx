@@ -39,7 +39,7 @@ class Days extends React.Component {
   }
   componentDidMount() {
     const userinfo = JSON.parse(localStorage.getItem('user_meet'))
-    fetch("http://34.122.205.216:8080/graphql", {
+    fetch(process.env.REACT_APP_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
