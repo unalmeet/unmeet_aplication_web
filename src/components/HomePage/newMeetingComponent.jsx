@@ -28,7 +28,8 @@ class NewMeeting extends Component {
   }
 
   handleInputChange(event) {
-    this.setState({ host: this.context });
+    const userinfo = JSON.parse(localStorage.getItem("user_meet"));
+    this.setState({ host: userinfo.id });
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -40,7 +41,7 @@ class NewMeeting extends Component {
   }
   handleSubmit(event) {
     console.log(this.state)
-    fetch("http://34.122.205.216:8080/graphql", {
+    fetch(process.env.REACT_APP_API, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Credentials": true },
       body: JSON.stringify({

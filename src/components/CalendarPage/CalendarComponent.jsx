@@ -1,12 +1,7 @@
 import React, { useRef } from "react";
 import {
   Card,
-  CardGroup,
   CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardText,
-  Button,
 } from "reactstrap";
 import { Logo } from "../Logo";
 import Days from "./Days";
