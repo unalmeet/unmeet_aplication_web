@@ -291,7 +291,7 @@ const InMeeting = props => {
         {
             addNewTransmission(meetingData:{
                 idMeeting: "${meetingId}",
-                idUser: ${userinfo.id}
+                idUser: ${parseInt(userinfo.id)}
             })
             { token }
         }`
@@ -314,7 +314,7 @@ const InMeeting = props => {
                 autoConnect: false,
                 auth: {
                     token: transmissionToken,
-                    usr: userinfo.id
+                    usr: parseInt(userinfo.id)
                 }
             });
     
