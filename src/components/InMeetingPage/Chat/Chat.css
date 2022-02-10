@@ -1,0 +1,51 @@
+#messages {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+#app {
+    margin-top: 2rem;
+}
+
+.chat-container {
+    position: relative;
+    color: white;
+    background-color: #144b7d;
+}
+
+.chat-input {
+    padding: 0 0.5rem;
+    margin: auto;
+    display: flex;
+    align-items: flex-start;
+}
+
+.chat-input input {
+    width: 100%;
+}
+
+.chat-input svg {
+    cursor: pointer;
+    margin: 0.3rem !important;
+}
+
+.chat-input-text {
+    width: 100%;
+}
+
+.chat-message-box {
+    background-color: #144b7d;
+    margin: 0.1rem;
+    padding: 0.1rem;
+}
+
+.chat-messages-container {
+    background-color: white;
+    border: red 20px solid;
+    padding: 1rem;
+    width: 100%;
+    /* or whatever width you want. */
+    max-height: 500px;
+    /* or whatever width you want. */
+    overflow-y: auto;
+}

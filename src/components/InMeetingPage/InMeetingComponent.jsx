@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import './InMeetingComponent.css';
+import MainChat from './Chat/MainChat'
 import { Row, Col } from "reactstrap";
 import avatarImg from "../../assets/avatar.png";
 import { 
@@ -231,48 +232,6 @@ const Controls = props => {
     </Fragment>
 }
 
-const ChatInput = () => {
-    return <div className='chat-input'>
-        
-        
-        <FontAwesomeIcon icon={faLaugh} className='chat-input-emoji-icon' />
-        <textarea name="textarea" rows="2" className='chat-input-text' />
-        <FontAwesomeIcon icon={faPaperPlane}  className='chat-input-send-icon' />
-    </div>
-}
-
-const ChatMessages = () => {
-    const messages = [
-        {
-            id: 1,
-            message: "message 1",
-            from: "user 1"
-        },
-        {
-            id: 2,
-            message: "message 2",
-            from: "user 2"
-        },
-        {
-            id: 3,
-            message: "message 3",
-            from: "user 3"
-        },
-        {
-            id: 4,
-            message: "message 4",
-            from: "user 4"
-        }
-    ]
-
-    return <div className='chat-messages-container'>
-        {   
-            messages.map((m, i) => (
-                <div key={i} className='chat-message-box'><strong>{m.from}: </strong>{m.message}</div>
-            ))
-        }
-    </div>
-}
 
 const InMeeting = props => {
 
@@ -385,7 +344,7 @@ const InMeeting = props => {
                 context.drawImage(imageHtml, 0, 0,imageObj.width,imageObj.height);
             };
             socket.emit('video', canvasHtml.toDataURL('image/webp'));
-        }, 100);
+        }, 50);
     };
 
     const users = [
@@ -419,8 +378,7 @@ const InMeeting = props => {
     return <Row className='full-height'>
         
             <Col xs={12} md={2} className='chat-container'>
-                <ChatMessages />
-                <ChatInput/>
+                <MainChat url= {props.url} />
             </Col>
             <Col xs={12} md={10} className='right-panel'>
                 <Row xs={12} className='user-grid'>
