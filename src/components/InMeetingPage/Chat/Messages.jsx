@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './Chat.css';
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Messages({ socket, url }) {
   const [messages, setMessages] = useState([]);
@@ -48,7 +50,7 @@ function Messages({ socket, url }) {
     <div className="chat-messages-container">
       {[...Object.values(messages)].map((message) => (
         <div className="chat-message-box">
-          <span className="user">{message.name}:</span>
+          <span className="user">{message.name} :&nbsp;</span>
           <span className="message">{message.text}</span>
         </div>
       ))}
@@ -56,7 +58,7 @@ function Messages({ socket, url }) {
         Usuarios conectados
         {users.map((user) => (
           <div className="user-container">
-            <span className="user">{user.handshake.auth.id}</span>
+            <span className="user"><FontAwesomeIcon icon={faUser} color="#61B329" /> {user.handshake.auth.id}</span>
           </div>
         ))}
       </div>

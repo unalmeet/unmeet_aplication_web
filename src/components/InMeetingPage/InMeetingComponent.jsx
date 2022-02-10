@@ -377,7 +377,7 @@ const InMeeting = props => {
     
     return <Row className='full-height'>
         
-            <Col xs={12} md={2} className='chat-container'>
+            <Col xs={12} md={2} className='chat-container-main'>
                 <MainChat url= {props.url} />
             </Col>
             <Col xs={12} md={10} className='right-panel'>

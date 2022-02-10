@@ -14,12 +14,12 @@ const NewMessage = ({ socket, url }) => {
 
   return (
     <div className="chat-input">
-      <form onSubmit={submitForm}>
+      <form onSubmit={submitForm} className="chat-form">
         <Input
           autoFocus
           value={text}
           className="chat-input-text"
-          placeholder="Type your message"
+          placeholder="Escribe tu mensaje"
           onChange={(e) => {
             setText(e.currentTarget.value);
           }}

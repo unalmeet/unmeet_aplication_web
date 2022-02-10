@@ -66,10 +66,15 @@
     border: 1px solid #029ACA;
 }
 
-.chat-container {
+.chat-container-main {
     position: relative;
     color: white;
     background-color: #144b7d;
+
+    display: flex;
+    align-items: self-end;
+    padding-bottom: 8rem;
+    
 }
 
 .chat-input {

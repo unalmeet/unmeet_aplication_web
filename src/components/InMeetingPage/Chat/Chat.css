@@ -34,18 +34,44 @@
 }
 
 .chat-message-box {
-    background-color: #144b7d;
+    background-color: white;
     margin: 0.1rem;
     padding: 0.1rem;
+    color: #464646;
+    line-height: 26px;
+    font-size: 1rem;
+    border-radius: 7px;
+    margin-bottom: 1rem;
+    position: relative;
+
+    justify-content: start;
+    display: flex;
+    padding: 0.1rem 1rem;
+}
+
+.chat-message-box::after {
+    content: "";
+    position: absolute;
+    margin: 0px -28px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 14px solid white;
 }
 
 .chat-messages-container {
-    background-color: white;
-    border: red 20px solid;
     padding: 1rem;
     width: 100%;
     /* or whatever width you want. */
-    max-height: 500px;
     /* or whatever width you want. */
     overflow-y: auto;
+}
+
+.chat-form {
+    display: flex;
+}
+
+.chat-form button {
+    padding: 0;
 }
